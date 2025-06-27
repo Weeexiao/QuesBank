@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuesBank - 智能题库</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            secondary: '#64748b',
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#06b6d4',
+            light: '#f8fafc',
+            dark: '#1e293b'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-transition {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .bg-gradient-blue {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      }
+      .bg-gradient-gray {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      }
+    }
+  </style>
+</head>
+<body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-blue text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#" id="homeNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-list-alt mr-1"></i> 刷题模式
+        </a>
+        <a href="#" id="testNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-flask mr-1"></i> 测试模式
+        </a>
+        <a href="#" id="examNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-pencil mr-1"></i> 考试模式
+        </a>
+        <a href="#" id="bankNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-book mr-1"></i> 题库
+        </a>
+        <a href="#" id="statsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-line-chart mr-1"></i> 统计
+        </a>
+        <a href="#" id="settingsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-cog mr-1"></i> 设置
+        </a>
+        <a href="#" id="helpNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-question-circle mr-1"></i> 帮助
+        </a>
+      </nav>
+      <button class="md:hidden text-white text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- 左侧面板：输入区 -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-card p-6 mb-6">
+          <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fa fa-pencil-square-o text-primary mr-2"></i>
+            输入题目
+          </h2>
+          
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">JSON 输入</label>
+            <textarea 
+              id="jsonInput" 
+              class="w-full h-40 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+              placeholder='{"选择题":[{"question":"...","options":["..."],"answer":"...","explanation":"..."},{"question":"...","options":["..."],"answer":"...","explanation":"..."}],"填空题":[{"question":"...","answer":"...","explanation":"..."},{"question":"...","answer":"...","explanation":"..."}],"判断题":[{"question":"...","answer":"正确/错误","explanation":"..."},{"question":"...","answer":"正确/错误","explanation":"..."}]}'>
+            </textarea>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <button 
+              id="parseButton" 
+              class="bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex-1 flex justify-center items-center">
+              <i class="fa fa-code mr-2"></i> 解析JSON
+            </button>
+            <button 
+              id="exampleButton" 
+              class="bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex-1 flex justify-center items-center">
+              <i class="fa fa-lightbulb-o mr-2"></i> 示例
+            </button>
+          </div>
+          
+          <div class="border-t border-gray-200 pt-4">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+              <i class="fa fa-magic text-primary mr-2"></i>
+              AI 生成题目
+            </h3>
+            
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">输入文本</label>
+              <textarea 
+                id="textInput" 
+                class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                placeholder="请输入一段文本，AI将根据此文本生成题目...">
+              </textarea>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">选择题</label>
+                <input type="number" id="mcqCount" value="3" min="0" max="10" 
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">填空题</label>
+                <input type="number" id="fillCount" value="2" min="0" max="10" 
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">判断题</label>
+                <input type="number" id="tfCount" value="2" min="0" max="10" 
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">API Key (可选)</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="apiKey" 
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 pr-8"
+                  placeholder="DeepSeek API Key">
+                <button id="toggleKey" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button 
+              id="generateButton" 
+              class="w-full bg-info hover:bg-info/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex justify-center items-center">
+              <i class="fa fa-magic mr-2"></i> 生成题目
+            </button>
+          </div>
+        </div>
+        
+        <!-- 本地题库 -->
+        <div class="bg-white rounded-xl shadow-card p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold flex items-center">
+              <i class="fa fa-bookmark text-primary mr-2"></i>
+              我的题库
+            </h2>
+            <div class="flex space-x-2">
+              <button 
+                id="importButton" 
+                class="bg-info hover:bg-info/90 text-white py-1 px-3 rounded-lg transition-all duration-200 flex items-center text-sm">
+                <i class="fa fa-upload mr-1"></i> 导入
+              </button>
+              <button 
+                id="exportButton" 
+                class="bg-secondary hover:bg-secondary/90 text-white py-1 px-3 rounded-lg transition-all duration-200 flex items-center text-sm">
+                <i class="fa fa-download mr-1"></i> 导出
+              </button>
+              <button 
+                id="clearButton" 
+                class="bg-danger hover:bg-danger/90 text-white py-1 px-3 rounded-lg transition-all duration-200 flex items-center text-sm">
+                <i class="fa fa-trash mr-1"></i> 清空
+              </button>
+            </div>
+          </div>
+          
+          <div id="localBank" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+            <div class="text-gray-500 text-center py-4">
+              <i class="fa fa-folder-open-o text-3xl mb-2 block"></i>
+              <p>暂无收藏的题目</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 右侧面板：答题区 -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-xl shadow-card p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold flex items-center">
+              <i class="fa fa-list-alt text-primary mr-2"></i>
+              刷题模式
+            </h2>
+            <div class="flex space-x-2">
+              <button id="shuffleButton" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-3 rounded-lg transition-all duration-200 flex items-center text-sm">
+                <i class="fa fa-random mr-1"></i> 随机排序
+              </button>
+              <button id="saveButton" class="bg-success hover:bg-success/90 text-white py-1 px-3 rounded-lg transition-all duration-200 flex items-center text-sm">
+                <i class="fa fa-save mr-1"></i> 保存到题库
+              </button>
+            </div>
+          </div>
+          
+          <div id="questionStats" class="bg-gray-50 rounded-lg p-4 mb-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="text-center">
+                <p class="text-sm text-gray-500">总题数</p>
+                <p class="text-2xl font-bold text-primary" id="totalQuestions">0</p>
+              </div>
+              <div class="text-center">
+                <p class="text-sm text-gray-500">总分值</p>
+                <p class="text-2xl font-bold text-primary" id="totalPoints">0</p>
+              </div>
+              <div class="text-center">
+                <p class="text-sm text-gray-500">已完成</p>
+                <p class="text-2xl font-bold text-success" id="completedQuestions">0</p>
+              </div>
+            </div>
+          </div>
+          
+          <div id="questionsContainer" class="space-y-6">
+            <div class="text-gray-500 text-center py-12">
+              <i class="fa fa-file-text-o text-5xl mb-4 block"></i>
+              <p class="text-lg">请在左侧输入JSON题目或使用AI生成题目</p>
+            </div>
+          </div>
+          
+          <div id="scoreCard" class="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-lg hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+              <div class="text-center md:text-left mb-4 md:mb-0">
+                <h3 class="text-xl font-bold text-gray-800 mb-1">考试完成！</h3>
+                <p class="text-gray-600">恭喜你完成了所有题目</p>
+              </div>
+              <div class="flex items-center">
+                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                  <span class="text-3xl font-bold text-primary" id="finalScore">0</span>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">正确率</p>
+                  <p class="text-xl font-bold text-gray-800" id="correctRate">0%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <div class="flex items-center space-x-2">
+            <i class="fa fa-graduation-cap text-xl"></i>
+            <span class="font-bold text-lg">QuesBank 智能题库</span>
+          </div>
+          <p class="text-gray-400 text-sm mt-1">交互式在线考试平台</p>
+        </div>
+        <div class="flex space-x-6">
+          <a href="https://github.com/Weeexiao/QuesBank" class="text-gray-400 hover:text-white transition-colors duration-200">
+            <i class="fa fa-github text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+            <i class="fa fa-twitter text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+            <i class="fa fa-linkedin text-xl"></i>
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-gray-400 text-sm">
+        &copy; 2025 QuesBank. 保留所有权利.
+      </div>
+    </div>
+  </footer>
+
+  <!-- 加载中模态框 -->
+  <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+        <h3 class="text-lg font-medium text-gray-800 mb-2" id="loadingText">处理中...</h3>
+        <p class="text-gray-500" id="loadingSubtext">请稍候</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知提示 -->
+  <div id="notification" class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center z-40 max-w-xs">
+    <div id="notificationIcon" class="mr-3 text-primary">
+      <i class="fa fa-info-circle"></i>
+    </div>
+    <div>
+      <h4 id="notificationTitle" class="font-medium text-gray-800">通知标题</h4>
+      <p id="notificationMessage" class="text-sm text-gray-600">通知内容</p>
+    </div>
+  </div>
+
+  <!-- 模态框区域 -->
+  <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div id="modalContent" class="bg-white rounded-xl shadow-lg max-w-lg w-full p-6 relative">
+      <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl"><i class="fa fa-times"></i></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // 全局变量
+    let parsedQuestions = [];
+    let userAnswers = {};
+    let questionPoints = {};
+    let showExplanations = false;
+    
+    // API配置
+    const DEEPSEEK_ENDPOINT = "https://api.deepseek.com/v1/chat/completions";
+    const DEFAULT_KEY = "sk-91cc65bf381d435785c2aa5de135d67e";
+    
+    // DOM 元素
+    const jsonInput = document.getElementById('jsonInput');
+    const parseButton = document.getElementById('parseButton');
+    const exampleButton = document.getElementById('exampleButton');
+    const textInput = document.getElementById('textInput');
+    const mcqCount = document.getElementById('mcqCount');
+    const fillCount = document.getElementById('fillCount');
+    const tfCount = document.getElementById('tfCount');
+    const apiKey = document.getElementById('apiKey');
+    const toggleKey = document.getElementById('toggleKey');
+    const generateButton = document.getElementById('generateButton');
+    const questionsContainer = document.getElementById('questionsContainer');
+    const questionStats = document.getElementById('questionStats');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const totalPoints = document.getElementById('totalPoints');
+    const completedQuestions = document.getElementById('completedQuestions');
+    const saveButton = document.getElementById('saveButton');
+    const shuffleButton = document.getElementById('shuffleButton');
+    const localBank = document.getElementById('localBank');
+    const importButton = document.getElementById('importButton');
+    const exportButton = document.getElementById('exportButton');
+    const clearButton = document.getElementById('clearButton');
+    const scoreCard = document.getElementById('scoreCard');
+    const finalScore = document.getElementById('finalScore');
+    const correctRate = document.getElementById('correctRate');
+    const loadingModal = document.getElementById('loadingModal');
+    const loadingText = document.getElementById('loadingText');
+    const loadingSubtext = document.getElementById('loadingSubtext');
+    const notification = document.getElementById('notification');
+    const notificationIcon = document.getElementById('notificationIcon');
+    const notificationTitle = document.getElementById('notificationTitle');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const homeNav = document.getElementById('homeNav');
+    const bankNav = document.getElementById('bankNav');
+    const statsNav = document.getElementById('statsNav');
+    const settingsNav = document.getElementById('settingsNav');
+    const helpNav = document.getElementById('helpNav');
+    const testNav = document.getElementById('testNav');
+    const examNav = document.getElementById('examNav');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+    
+    // 示例JSON数据
+    const exampleJson = {
+      "选择题": [
+        {
+          "question": "HTML中常用的块级元素是？",
+          "options": ["<div>", "<span>", "<a>", "<img>"],
+          "answer": "<div>",
+          "explanation": "在HTML中，<div>是最常用的块级元素，它会独占一行并扩展到父元素的宽度。"
+        },
+        {
+          "question": "CSS中，哪个属性用于改变元素的背景颜色？",
+          "options": ["color", "text-color", "background-color", "bg-color"],
+          "answer": "background-color",
+          "explanation": "在CSS中，background-color属性用于设置元素的背景颜色。"
+        },
+        {
+          "question": "JavaScript中，哪个方法用于向数组末尾添加一个元素？",
+          "options": ["push()", "add()", "append()", "insert()"],
+          "answer": "push()",
+          "explanation": "在JavaScript中，数组的push()方法用于向数组的末尾添加一个或多个元素，并返回新的长度。"
+        }
+      ],
+      "填空题": [
+        {
+          "question": "JavaScript的数组方法pop()用于移除数组的(  )元素。",
+          "answer": "最后一个",
+          "explanation": "pop()方法用于删除数组的最后一个元素并返回该元素。"
+        },
+        {
+          "question": "在HTML中，(  )属性用于指定链接的目标URL。",
+          "answer": "href",
+          "explanation": "在HTML的<a>标签中，href属性用于指定链接的目标URL。"
+        }
+      ],
+      "判断题": [
+        {
+          "question": "CSS用于描述HTML文档的结构。",
+          "answer": "错误",
+          "explanation": "CSS是用于描述HTML文档的呈现方式（外观和格式），而不是结构。HTML负责文档的结构。"
+        },
+        {
+          "question": "JavaScript是一种编译型语言。",
+          "answer": "错误",
+          "explanation": "JavaScript是一种解释型语言，代码在运行时由浏览器解释执行，而不需要预先编译。"
+        }
+      ]
+    };
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadLocalBank();
+      
+      // 事件监听
+      parseButton.addEventListener('click', parseJson);
+      exampleButton.addEventListener('click', loadExample);
+      generateButton.addEventListener('click', generateQuestions);
+      toggleKey.addEventListener('click', toggleApiKeyVisibility);
+      saveButton.addEventListener('click', saveToLocalBank);
+      shuffleButton.addEventListener('click', shuffleQuestions);
+      importButton.addEventListener('click', importQuestionBank);
+      exportButton.addEventListener('click', exportQuestionBank);
+      clearButton.addEventListener('click', clearLocalBank);
+      testNav.addEventListener('click', e => {
+        e.preventDefault();
+        window.location.href = 'test.html';
+      });
+      examNav.addEventListener('click', e => {
+        e.preventDefault();
+        window.location.href = 'exam.html';
+      });
+      settingsNav.addEventListener('click', e => {
+        e.preventDefault();
+        window.location.href = 'settings.html';
+      });
+      bankNav.addEventListener('click', e => {
+        e.preventDefault();
+        window.location.href = 'bank.html';
+      });
+    });
+    
+    // 解析JSON题目
+    function parseJson() {
+      try {
+        const input = jsonInput.value.trim();
+        if (!input) {
+          showNotification('错误', '请输入JSON内容', 'error');
+          return;
+        }
+        
+        parsedQuestions = parseQuestions(input);
+        renderQuestions();
+        updateQuestionStats();
+        showNotification('成功', 'JSON解析成功', 'success');
+      } catch (error) {
+        showNotification('解析错误', error.message, 'error');
+      }
+    }
+    
+    // 解析问题逻辑 - 优化版本
+    function parseQuestions(input) {
+      try {
+        const data = JSON.parse(input);
+        const types = ["选择题", "填空题", "判断题"];
+        const abcd = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        
+        const result = types.map(type => ({
+          type,
+          questions: (data[type] || []).map((q, index) => {
+            if (!q.question || !q.answer || !q.explanation) {
+              throw new Error(`${type}第${index + 1}题缺少必要字段（question、answer、explanation）`);
+            }
+            if (type === '选择题') {
+              if (!q.options || !Array.isArray(q.options) || q.options.length < 2) {
+                throw new Error(`${type}第${index + 1}题选项格式错误，至少需要2个选项`);
+              }
+              // 渲染前为所有选项加前缀（如果没有）
+              q.options = q.options.map((opt, idx) => {
+                if (!/^[A-H][.．、\s]/.test(opt)) {
+                  return `${abcd[idx]}. ${opt}`;
+                }
+                return opt;
+              });
+              // 支持答案为选项内容或选项序号（如A/B/C/D/1/2/3/4）
+              let answerInOptions = q.options.includes(q.answer);
+              if (!answerInOptions) {
+                // 尝试字母或数字序号
+                const idx = (() => {
+                  if (/^[A-H]$/.test(q.answer)) return q.answer.charCodeAt(0) - 65;
+                  if (/^[1-9]$/.test(q.answer)) return parseInt(q.answer) - 1;
+                  return -1;
+                })();
+                if (idx >= 0 && idx < q.options.length) {
+                  answerInOptions = true;
+                  q.answer = q.options[idx]; // 替换为加前缀后的真实选项内容
+                }
+              }
+              if (!answerInOptions) {
+                // 尝试在加前缀的选项中查找包含原答案的项
+                const found = q.options.find(opt => opt.includes(q.answer));
+                if (found) {
+                  q.answer = found;
+                  answerInOptions = true;
+                }
+              }
+              if (!answerInOptions) {
+                throw new Error(`${type}第${index + 1}题答案不在选项中`);
+              }
+            } else if (type === '判断题') {
+              if (!['正确', '错误'].includes(q.answer)) {
+                throw new Error(`${type}第${index + 1}题答案必须是"正确"或"错误"`);
+              }
+            }
+            return {
+              question: q.question,
+              options: q.options || [],
+              answer: q.answer,
+              explanation: q.explanation
+            };
+          })
+        })).filter(category => category.questions.length > 0);
+        if (result.length === 0) {
+          throw new Error("未找到有效的题目数据");
+        }
+        return result;
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          throw new Error("JSON格式错误，请检查语法");
+        }
+        throw new Error(e.message || "格式解析错误：需符合标准JSON题型结构");
+      }
+    }
+    
+    // 加载示例JSON
+    function loadExample() {
+      jsonInput.value = JSON.stringify(exampleJson, null, 2);
+      showNotification('示例加载成功', '已加载示例JSON数据', 'info');
+    }
+    
+    // 生成题目 - 实现真正的API调用
+    async function generateQuestions() {
+      const text = textInput.value.trim();
+      const mcq = parseInt(mcqCount.value) || 0;
+      const fill = parseInt(fillCount.value) || 0;
+      const tf = parseInt(tfCount.value) || 0;
+      
+      if (!text) {
+        showNotification('错误', '请输入文本内容', 'error');
+        return;
+      }
+      
+      if (mcq + fill + tf <= 0) {
+        showNotification('错误', '请至少选择一种题型的数量', 'error');
+        return;
+      }
+      
+      // 更强制的提示词
+      const promptTemplate = `请将以下文本转换为：
+- ${mcq}道选择题（含4个逻辑关联选项）
+- ${fill}道填空题
+- ${tf}道判断题（答案用"正确"或"错误"）
+【必须严格遵守以下要求】：
+1. 只输出标准JSON，不要输出任何解释、注释、代码块标记或多余内容
+2. 每题必须包含explanation字段
+3. 选择题干扰项需有迷惑性
+4. 填空题留空处用(  )表示
+
+标准JSON结构示例：
+{
+  "选择题": [
+    {"question":"...","options":["..."],"answer":"...","explanation":"..."}
+  ],
+  "填空题": [
+    {"question":"...","answer":"...","explanation":"..."}
+  ],
+  "判断题": [
+    {"question":"...","answer":"正确/错误","explanation":"..."}
+  ]
+}
+
+待转换文本：
+${text}
+`;
+      
+      showLoading('生成中', '正在使用AI生成题目，请稍候...');
+      
+      try {
+        const key = (apiKey.value.trim() || localStorage.getItem('deepseekApiKey') || '').trim();
+        if (!key) {
+          hideLoading();
+          showNotification('错误', '请先输入API Key', 'error');
+          return;
+        }
+        
+        const response = await fetch(DEEPSEEK_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${key}`
+          },
+          body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: [
+              {
+                role: "user",
+                content: promptTemplate
+              }
+            ],
+            temperature: 0.7,
+            max_tokens: 4000
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          throw new Error('API返回数据格式错误');
+        }
+        
+        let generatedContent = data.choices[0].message.content.trim();
+        // --- 自动提取和容错处理JSON ---
+        let jsonContent = generatedContent;
+        // 1. 代码块包裹
+        const jsonMatch = generatedContent.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+          jsonContent = jsonMatch[1];
+        }
+        // 2. 前后有多余内容，只保留第一个大括号包裹的内容
+        if (!jsonMatch && !jsonContent.trim().startsWith('{')) {
+          const firstBrace = jsonContent.indexOf('{');
+          const lastBrace = jsonContent.lastIndexOf('}');
+          if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+            jsonContent = jsonContent.slice(firstBrace, lastBrace + 1);
+          }
+        }
+        // --- END ---
+        parsedQuestions = parseQuestions(jsonContent);
+        renderQuestions();
+        updateQuestionStats();
+        
+        hideLoading();
+        showNotification('成功', '题目生成成功', 'success');
+        
+        // 将生成的JSON显示在输入框中
+        const generatedJson = {};
+        parsedQuestions.forEach(category => {
+          generatedJson[category.type] = category.questions;
+        });
+        jsonInput.value = JSON.stringify(generatedJson, null, 2);
+        
+      } catch (error) {
+        hideLoading();
+        console.error('API调用错误:', error);
+        
+        if (error.message.includes('API请求失败')) {
+          showNotification('API调用失败', '请检查网络连接和API Key', 'error');
+        } else if (error.message.includes('格式解析错误')) {
+          showNotification('生成失败', 'AI生成的格式不符合要求，请重试', 'error');
+        } else {
+          showNotification('生成失败', error.message, 'error');
+        }
+      }
+    }
+    
+    // 切换API Key可见性
+    function toggleApiKeyVisibility() {
+      if (apiKey.type === 'password') {
+        apiKey.type = 'text';
+        toggleKey.innerHTML = '<i class="fa fa-eye"></i>';
+      } else {
+        apiKey.type = 'password';
+        toggleKey.innerHTML = '<i class="fa fa-eye-slash"></i>';
+      }
+    }
+    
+    // 渲染题目
+    function renderQuestions() {
+      if (!parsedQuestions || parsedQuestions.length === 0) {
+        questionsContainer.innerHTML = `
+          <div class="text-gray-500 text-center py-12">
+            <i class="fa fa-file-text-o text-5xl mb-4 block"></i>
+            <p class="text-lg">没有解析到任何题目</p>
+          </div>
+        `;
+        questionStats.classList.add('hidden');
+        scoreCard.classList.add('hidden');
+        return;
+      }
+      
+      questionsContainer.innerHTML = '';
+      userAnswers = {};
+      questionPoints = {};
+      
+      let allQuestions = [];
+      let questionNumber = 1;
+      
+      // 计算每题分值
+      const totalQuestionCount = parsedQuestions.reduce((count, category) => count + category.questions.length, 0);
+      const pointsPerQuestion = totalQuestionCount > 0 ? Math.round(100 / totalQuestionCount * 100) / 100 : 0;
+      
+      // 收集所有题目
+      parsedQuestions.forEach(category => {
+        category.questions.forEach(question => {
+          allQuestions.push({
+            ...question,
+            type: category.type,
+            number: questionNumber++,
+            points: pointsPerQuestion
+          });
+        });
+      });
+      
+      // 渲染每个题目
+      allQuestions.forEach(question => {
+        const questionElement = createQuestionCard(question);
+        questionsContainer.appendChild(questionElement);
+        
+        // 保存题目分值
+        questionPoints[question.number] = question.points;
+      });
+      
+      questionStats.classList.remove('hidden');
+      scoreCard.classList.add('hidden');
+    }
+    
+    // 创建题目卡片
+    function createQuestionCard(question) {
+      const card = document.createElement('div');
+      card.className = 'bg-white rounded-xl shadow-card card-transition card-hover p-6 relative overflow-hidden';
+      
+      // 添加题型标签
+      const typeBadge = document.createElement('div');
+      typeBadge.className = 'absolute top-0 right-0 bg-primary text-white px-3 py-1 text-sm font-medium rounded-bl-lg';
+      typeBadge.textContent = question.type;
+      card.appendChild(typeBadge);
+      
+      // 题目头部
+      const header = document.createElement('div');
+      header.className = 'flex justify-between items-center mb-4';
+      
+      const numberHeading = document.createElement('h3');
+      numberHeading.className = 'text-lg font-semibold text-gray-800';
+      numberHeading.innerHTML = `题号${question.number} | 分值: <span class="text-primary">${question.points}</span>`;
+      header.appendChild(numberHeading);
+      
+      const statusBadge = document.createElement('div');
+      statusBadge.className = 'px-2 py-1 text-xs font-medium rounded-full hidden';
+      header.appendChild(statusBadge);
+      
+      card.appendChild(header);
+      
+      // 题目内容
+      const questionContent = document.createElement('div');
+      questionContent.className = 'mb-4';
+      
+      const questionText = document.createElement('p');
+      questionText.className = 'text-gray-800 mb-3';
+      questionText.innerHTML = question.question;
+      questionContent.appendChild(questionText);
+      
+      // 根据题型渲染不同的输入控件
+      const answerContainer = document.createElement('div');
+      answerContainer.className = 'mb-6';
+      
+      if (question.type === '选择题') {
+        const abcd = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        question.options.forEach((option, idx) => {
+          let displayOption = option;
+          // 已在parseQuestions中加前缀，这里直接用
+          const inputId = `q${question.number}-${abcd[idx]}`;
+          const optionDiv = document.createElement('div');
+          optionDiv.className = 'mb-2';
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.id = inputId;
+          input.name = `q${question.number}`;
+          input.value = displayOption;
+          input.className = 'h-4 w-4 text-primary focus:ring-primary border-gray-300';
+          input.addEventListener('change', () => {
+            userAnswers[question.number] = displayOption;
+            updateStatusBadge(statusBadge, displayOption === question.answer);
+            updateQuestionStats();
+            checkAllAnswered();
+          });
+          const label = document.createElement('label');
+          label.htmlFor = inputId;
+          label.className = 'ml-2 text-sm font-medium text-gray-700';
+          label.textContent = displayOption;
+          optionDiv.appendChild(input);
+          optionDiv.appendChild(label);
+          answerContainer.appendChild(optionDiv);
+        });
+      } else if (question.type === '填空题') {
+        // 填空题
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200';
+        input.placeholder = '请输入答案...';
+        
+        // 添加输入事件
+        input.addEventListener('input', () => {
+          userAnswers[question.number] = input.value.trim();
+          updateStatusBadge(statusBadge, input.value.trim() === question.answer);
+          updateQuestionStats();
+          checkAllAnswered();
+        });
+        
+        answerContainer.appendChild(input);
+      } else if (question.type === '判断题') {
+        // 判断题
+        ['正确', '错误'].forEach(option => {
+          const optionDiv = document.createElement('div');
+          optionDiv.className = 'mb-2';
+          
+          const inputId = `q${question.number}-${option}`;
+          
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.id = inputId;
+          input.name = `q${question.number}`;
+          input.value = option;
+          input.className = 'h-4 w-4 text-primary focus:ring-primary border-gray-300';
+          
+          // 添加选择事件
+          input.addEventListener('change', () => {
+            userAnswers[question.number] = option;
+            updateStatusBadge(statusBadge, option === question.answer);
+            updateQuestionStats();
+            checkAllAnswered();
+          });
+          
+          const label = document.createElement('label');
+          label.htmlFor = inputId;
+          label.className = 'ml-2 text-sm font-medium text-gray-700';
+          label.textContent = option;
+          
+          optionDiv.appendChild(input);
+          optionDiv.appendChild(label);
+          answerContainer.appendChild(optionDiv);
+        });
+      }
+      
+      questionContent.appendChild(answerContainer);
+      card.appendChild(questionContent);
+      
+      // 解析按钮和解析内容
+      const explanationButton = document.createElement('button');
+      explanationButton.className = 'mt-2 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm transition-colors duration-200 flex items-center';
+      explanationButton.innerHTML = '<i class="fa fa-lightbulb-o mr-1"></i> 查看解析';
+      
+      const explanationContainer = document.createElement('div');
+      explanationContainer.className = 'mt-3 p-3 bg-gray-50 rounded-lg hidden';
+      
+      const answerLabel = document.createElement('p');
+      answerLabel.className = 'font-medium text-gray-800 mb-1';
+      answerLabel.innerHTML = `<i class="fa fa-check-circle text-success mr-1"></i> 正确答案: <span class="font-normal">${question.answer}</span>`;
+      
+      const explanationText = document.createElement('p');
+      explanationText.className = 'text-gray-600 text-sm';
+      explanationText.innerHTML = `<i class="fa fa-info-circle text-primary mr-1"></i> ${question.explanation}`;
+      
+      explanationContainer.appendChild(answerLabel);
+      explanationContainer.appendChild(explanationText);
+      
+      explanationButton.addEventListener('click', () => {
+        explanationContainer.classList.toggle('hidden');
+        explanationButton.innerHTML = explanationContainer.classList.contains('hidden') 
+          ? '<i class="fa fa-lightbulb-o mr-1"></i> 查看解析' 
+          : '<i class="fa fa-eye-slash mr-1"></i> 隐藏解析';
+      });
+      
+      card.appendChild(explanationButton);
+      card.appendChild(explanationContainer);
+      
+      return card;
+    }
+    
+    // 更新状态标签
+    function updateStatusBadge(badge, isCorrect) {
+      badge.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+      
+      if (isCorrect !== undefined) {
+        badge.classList.add(isCorrect ? 'bg-green-100' : 'bg-red-100');
+        badge.classList.add(isCorrect ? 'text-green-800' : 'text-red-800');
+        badge.textContent = isCorrect ? '回答正确' : '回答错误';
+      } else {
+        badge.classList.add('bg-yellow-100', 'text-yellow-800');
+        badge.textContent = '已回答';
+      }
+      
+      badge.classList.remove('hidden');
+    }
+    
+    // 更新题目统计信息
+    function updateQuestionStats() {
+      const totalCount = Object.keys(questionPoints).length;
+      const completedCount = Object.keys(userAnswers).length;
+      let score = 0;
+      
+      // 计算得分
+      Object.entries(userAnswers).forEach(([questionNumber, answer]) => {
+        const question = findQuestionByNumber(parseInt(questionNumber));
+        if (question && answer === question.answer) {
+          score += questionPoints[questionNumber];
+        }
+      });
+      
+      totalQuestions.textContent = totalCount;
+      totalPoints.textContent = '100';
+      completedQuestions.textContent = completedCount;
+      
+      // 如果所有题目都已回答，显示得分卡
+      if (totalCount > 0 && completedCount === totalCount) {
+        finalScore.textContent = Math.round(score);
+        correctRate.textContent = `${Math.round((score / 100) * 100)}%`;
+        scoreCard.classList.remove('hidden');
+      } else {
+        scoreCard.classList.add('hidden');
+      }
+    }
+    
+    // 查找题目
+    function findQuestionByNumber(number) {
+      let currentNumber = 1;
+      
+      for (const category of parsedQuestions) {
+        for (const question of category.questions) {
+          if (currentNumber === number) {
+            return question;
+          }
+          currentNumber++;
+        }
+      }
+      
+      return null;
+    }
+    
+    // 检查是否所有题目都已回答
+    function checkAllAnswered() {
+      const totalCount = Object.keys(questionPoints).length;
+      const completedCount = Object.keys(userAnswers).length;
+      
+      if (totalCount > 0 && completedCount === totalCount) {
+        showNotification('提示', '所有题目已完成！', 'success');
+      }
+    }
+    
+    // 保存到本地题库 - 优化版本
+    function saveToLocalBank() {
+      if (!parsedQuestions || parsedQuestions.length === 0) {
+        showNotification('错误', '没有题目可保存', 'error');
+        return;
+      }
+      
+      try {
+        const bankId = Date.now().toString();
+        const bankItem = {
+          id: bankId,
+          timestamp: new Date().toISOString(),
+          questions: parsedQuestions,
+          totalQuestions: parsedQuestions.reduce((count, category) => count + category.questions.length, 0)
+        };
+        
+        // 从localStorage获取现有题库
+        const existingBank = JSON.parse(localStorage.getItem('questionBank') || '[]');
+        
+        // 添加新条目
+        existingBank.push(bankItem);
+        
+        // 限制题库大小，保留最新的50个
+        if (existingBank.length > 50) {
+          existingBank.splice(0, existingBank.length - 50);
+        }
+        
+        // 保存回localStorage
+        localStorage.setItem('questionBank', JSON.stringify(existingBank));
+        
+        // 更新题库显示
+        loadLocalBank();
+        
+        showNotification('成功', '题目已保存到本地题库', 'success');
+      } catch (error) {
+        showNotification('保存失败', error.message, 'error');
+      }
+    }
+    
+    // 加载本地题库
+    function loadLocalBank() {
+      try {
+        const bank = JSON.parse(localStorage.getItem('questionBank') || '[]');
+        
+        if (bank.length === 0) {
+          localBank.innerHTML = `
+            <div class="text-gray-500 text-center py-4">
+              <i class="fa fa-folder-open-o text-3xl mb-2 block"></i>
+              <p>暂无收藏的题目</p>
+            </div>
+          `;
+          return;
+        }
+        
+        localBank.innerHTML = '';
+        
+        // 按时间倒序排列
+        bank.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        bank.forEach(item => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors duration-200';
+          
+          const date = new Date(item.timestamp);
+          const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+          
+          const infoDiv = document.createElement('div');
+          infoDiv.className = 'flex justify-between items-start mb-2';
+          
+          const title = document.createElement('div');
+          title.className = 'font-medium text-gray-800';
+          title.textContent = item.name ? item.name : `题库 #${item.id.substring(8)}`;
+          
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'text-xs text-gray-500';
+          dateSpan.textContent = formattedDate;
+          
+          const stats = document.createElement('div');
+          stats.className = 'text-xs text-gray-500 mt-1';
+          const questionCounts = item.questions.map(cat => `${cat.type}: ${cat.questions.length}`).join(' | ');
+          stats.textContent = `总题数: ${item.totalQuestions || 0} | ${questionCounts}`;
+          
+          infoDiv.appendChild(title);
+          infoDiv.appendChild(dateSpan);
+          
+          const buttonContainer = document.createElement('div');
+          buttonContainer.className = 'flex space-x-2 mt-2';
+          
+          const loadButton = document.createElement('button');
+          loadButton.className = 'text-primary hover:text-primary/80 text-sm transition-colors duration-200 flex items-center';
+          loadButton.innerHTML = '<i class="fa fa-external-link mr-1"></i> 加载';
+          loadButton.addEventListener('click', () => {
+            parsedQuestions = item.questions;
+            renderQuestions();
+            updateQuestionStats();
+            showNotification('成功', '已从题库加载题目', 'success');
+          });
+          
+          const renameButton = document.createElement('button');
+          renameButton.className = 'text-blue-500 hover:text-blue-700 text-sm transition-colors duration-200 flex items-center';
+          renameButton.innerHTML = '<i class="fa fa-edit mr-1"></i> 重命名';
+          renameButton.addEventListener('click', () => {
+            const newName = prompt('请输入新的题库名称：', item.name || '');
+            if (newName !== null && newName.trim() !== '') {
+              item.name = newName.trim();
+              // 更新localStorage
+              const all = JSON.parse(localStorage.getItem('questionBank') || '[]');
+              const idx = all.findIndex(b => b.id === item.id);
+              if (idx !== -1) {
+                all[idx].name = item.name;
+                localStorage.setItem('questionBank', JSON.stringify(all));
+              }
+              loadLocalBank();
+            }
+          });
+          
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'text-red-500 hover:text-red-700 text-sm transition-colors duration-200 flex items-center';
+          deleteButton.innerHTML = '<i class="fa fa-trash mr-1"></i> 删除';
+          deleteButton.addEventListener('click', () => {
+            if (confirm('确定要删除这个题库吗？')) {
+              deleteFromLocalBank(item.id);
+            }
+          });
+          
+          buttonContainer.appendChild(loadButton);
+          buttonContainer.appendChild(renameButton);
+          buttonContainer.appendChild(deleteButton);
+          
+          itemDiv.appendChild(infoDiv);
+          itemDiv.appendChild(stats);
+          itemDiv.appendChild(buttonContainer);
+          
+          localBank.appendChild(itemDiv);
+        });
+      } catch (error) {
+        localBank.innerHTML = `
+          <div class="text-red-500 text-center py-4">
+            <i class="fa fa-exclamation-triangle text-3xl mb-2 block"></i>
+            <p>加载题库失败: ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+    
+    // 从本地题库删除
+    function deleteFromLocalBank(id) {
+      try {
+        const bank = JSON.parse(localStorage.getItem('questionBank') || '[]');
+        const filteredBank = bank.filter(item => item.id !== id);
+        
+        localStorage.setItem('questionBank', JSON.stringify(filteredBank));
+        loadLocalBank();
+        
+        showNotification('成功', '题库已删除', 'success');
+      } catch (error) {
+        showNotification('删除失败', error.message, 'error');
+      }
+    }
+    
+    // 导出题库
+    function exportQuestionBank() {
+      try {
+        const bank = JSON.parse(localStorage.getItem('questionBank') || '[]');
+        
+        if (bank.length === 0) {
+          showNotification('提示', '题库为空，没有内容可导出', 'info');
+          return;
+        }
+        
+        // 创建导出数据
+        const exportData = {
+          exportTime: new Date().toISOString(),
+          totalBanks: bank.length,
+          banks: bank
+        };
+        
+        // 创建下载链接
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `题库导出_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        URL.revokeObjectURL(url);
+        
+        showNotification('成功', '题库已导出', 'success');
+      } catch (error) {
+        showNotification('导出失败', error.message, 'error');
+      }
+    }
+    
+    // 导入题库
+    function importQuestionBank() {
+      // 创建文件输入元素
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.json';
+      fileInput.style.display = 'none';
+      
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const importData = JSON.parse(e.target.result);
+            let banks = [];
+            // 兼容导入单个题库或题库数组
+            if (Array.isArray(importData)) {
+              banks = importData;
+            } else if (importData.banks && Array.isArray(importData.banks)) {
+              banks = importData.banks;
+            } else if (importData.questions && Array.isArray(importData.questions)) {
+              banks = [importData];
+            } else {
+              throw new Error('文件内容不是有效的题库结构');
+            }
+            // 获取现有题库
+            const existingBank = JSON.parse(localStorage.getItem('questionBank') || '[]');
+            // 合并题库，避免重复
+            const newBanks = banks.filter(importedBank => 
+              !existingBank.some(existing => existing.id === importedBank.id)
+            );
+            if (newBanks.length === 0) {
+              showNotification('提示', '所有题库都已存在，无需重复导入', 'info');
+              return;
+            }
+            // 添加新题库
+            existingBank.push(...newBanks);
+            // 限制题库大小
+            if (existingBank.length > 50) {
+              existingBank.splice(0, existingBank.length - 50);
+            }
+            // 保存到localStorage
+            localStorage.setItem('questionBank', JSON.stringify(existingBank));
+            // 更新显示
+            loadLocalBank();
+            showNotification('成功', '题库导入成功', 'success');
+          } catch (error) {
+            showNotification('导入失败', error.message, 'error');
+          }
+        };
+        reader.readAsText(file);
+      });
+      fileInput.click();
+    }
+    
+    // 清空题库
+    function clearLocalBank() {
+      if (confirm('确定要清空所有题库吗？此操作不可恢复！')) {
+        try {
+          localStorage.removeItem('questionBank');
+          loadLocalBank();
+          showNotification('成功', '题库已清空', 'success');
+        } catch (error) {
+          showNotification('清空失败', error.message, 'error');
+        }
+      }
+    }
+    
+    // 随机排序题目
+    function shuffleQuestions() {
+      if (!parsedQuestions || parsedQuestions.length === 0) {
+        showNotification('错误', '没有题目可排序', 'error');
+        return;
+      }
+      
+      // 复制并打乱题目顺序
+      const shuffledCategories = [...parsedQuestions];
+      
+      // 打乱每个分类中的题目
+      shuffledCategories.forEach(category => {
+        category.questions = [...category.questions].sort(() => Math.random() - 0.5);
+      });
+      
+      // 整体打乱分类顺序
+      shuffledCategories.sort(() => Math.random() - 0.5);
+      
+      parsedQuestions = shuffledCategories;
+      renderQuestions();
+      updateQuestionStats();
+      showNotification('成功', '题目已随机排序', 'success');
+    }
+    
+    // 显示加载中模态框
+    function showLoading(text, subtext) {
+      loadingText.textContent = text;
+      loadingSubtext.textContent = subtext;
+      loadingModal.classList.remove('hidden');
+    }
+    
+    // 隐藏加载中模态框
+    function hideLoading() {
+      loadingModal.classList.add('hidden');
+    }
+    
+    // 显示通知
+    function showNotification(title, message, type = 'info') {
+      notificationTitle.textContent = title;
+      notificationMessage.textContent = message;
+      
+      // 设置图标和颜色
+      notificationIcon.className = 'mr-3';
+      
+      if (type === 'success') {
+        notificationIcon.classList.add('text-success', 'fa', 'fa-check-circle');
+      } else if (type === 'error') {
+        notificationIcon.classList.add('text-danger', 'fa', 'fa-exclamation-circle');
+      } else if (type === 'warning') {
+        notificationIcon.classList.add('text-warning', 'fa', 'fa-exclamation-triangle');
+      } else {
+        notificationIcon.classList.add('text-info', 'fa', 'fa-info-circle');
+      }
+      
+      // 显示通知
+      notification.classList.remove('translate-y-20', 'opacity-0');
+      notification.classList.add('translate-y-0', 'opacity-100');
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        notification.classList.remove('translate-y-0', 'opacity-100');
+        notification.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // 顶部导航栏事件
+    bankNav.addEventListener('click', e => {
+      e.preventDefault();
+      window.location.href = 'bank.html';
+    });
+    statsNav.addEventListener('click', e => {
+      e.preventDefault();
+      showModal('统计', `<p>这里将展示答题统计、正确率等数据（可后续完善）。</p>`);
+    });
+    settingsNav.addEventListener('click', e => {
+      e.preventDefault();
+      showModal('设置', `<p>这里将展示应用设置项（如主题、API Key等，后续可扩展）。</p>`);
+    });
+    helpNav.addEventListener('click', e => {
+      e.preventDefault();
+      showModal('帮助', `
+        <h3 class='text-lg font-bold mb-2'>项目简介</h3>
+        <p>本项目为智能题库与答题平台，支持AI生成、JSON导入、自动评分与本地题库管理。</p>
+        <h3 class='text-lg font-bold mt-4 mb-2'>常见问题（QA）</h3>
+        <ul class='list-disc pl-5 text-sm mb-2'>
+          <li>Q: 如何制作自己的JS题目？<br/>A: 请参考下方"题目制作方法"部分。</li>
+          <li>Q: 选择题答案可以用A/B/C/D吗？<br/>A: 可以，系统会自动识别并匹配选项。</li>
+          <li>Q: 如何导入/导出题库？<br/>A: 在"我的题库"区域使用导入/导出按钮。</li>
+          <li>Q: 支持哪些题型？<br/>A: 选择题、填空题、判断题。</li>
+        </ul>
+        <h3 class='text-lg font-bold mt-4 mb-2'>JS题目制作方法</h3>
+        <p>请使用如下标准JSON结构：</p>
+        <pre class='bg-gray-100 rounded p-2 text-xs overflow-x-auto'>{
+  "选择题": [
+    {
+      "question": "题干内容",
+      "options": ["A. 选项1", "B. 选项2", "C. 选项3", "D. 选项4"],
+      "answer": "B", // 或 "B. 选项2"
+      "explanation": "解析说明"
+    }
+  ],
+  "填空题": [
+    {
+      "question": "题干内容(  )",
+      "answer": "正确答案",
+      "explanation": "解析说明"
+    }
+  ],
+  "判断题": [
+    {
+      "question": "题干内容",
+      "answer": "正确",
+      "explanation": "解析说明"
+    }
+  ]
+}</pre>
+        <p class='text-xs text-gray-500 mt-2'>注意：选择题答案可用A/B/C/D或完整选项内容，系统会自动识别。</p>
+      `);
+    });
+    closeModal.addEventListener('click', hideModal);
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === modalOverlay) hideModal();
+    });
+    function showModal(title, html) {
+      modalBody.innerHTML = `<h2 class='text-xl font-bold mb-4'>${title}</h2>` + html;
+      modalOverlay.classList.remove('hidden');
+    }
+    function hideModal() {
+      modalOverlay.classList.add('hidden');
+      modalBody.innerHTML = '';
+    }
+
+    // 优先从localStorage读取
+    apiKey.value = localStorage.getItem('deepseekApiKey') || '';
+    // 监听输入自动保存
+    apiKey.addEventListener('input', function() {
+      localStorage.setItem('deepseekApiKey', apiKey.value.trim());
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuesBank - 题库管理</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-blue text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-list-alt mr-1"></i> 刷题模式
+        </a>
+        <a href="index.html#testNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-flask mr-1"></i> 测试模式
+        </a>
+        <a href="exam.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-pencil mr-1"></i> 考试模式
+        </a>
+        <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
+          <i class="fa fa-book mr-1"></i> 题库
+        </a>
+        <a href="index.html#statsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-line-chart mr-1"></i> 统计
+        </a>
+        <a href="settings.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-cog mr-1"></i> 设置
+        </a>
+        <a href="index.html#helpNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-question-circle mr-1"></i> 帮助
+        </a>
+      </nav>
+      <button class="md:hidden text-white text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <!-- 主内容区 -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-card p-6 mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold flex items-center">
+          <i class="fa fa-book text-primary mr-2"></i>
+          题库管理
+        </h2>
+        <div class="flex gap-2">
+          <button id="importBankBtn" class="bg-info hover:bg-info/90 text-white py-1 px-3 rounded-lg flex items-center text-sm"><i class="fa fa-upload mr-1"></i> 导入</button>
+          <button id="exportBankBtn" class="bg-secondary hover:bg-secondary/90 text-white py-1 px-3 rounded-lg flex items-center text-sm"><i class="fa fa-download mr-1"></i> 导出</button>
+          <button id="addBankBtn" class="bg-success hover:bg-success/90 text-white py-1 px-3 rounded-lg flex items-center text-sm"><i class="fa fa-plus mr-1"></i> 新建题库</button>
+        </div>
+      </div>
+      <div id="bankList" class="space-y-3"></div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+      &copy; 2025 智能题库. 保留所有权利.
+    </div>
+  </footer>
+  <script>
+    // 修正导航栏渐变色样式
+    document.addEventListener('DOMContentLoaded', function() {
+      const style = document.createElement('style');
+      style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
+      document.head.appendChild(style);
+    });
+  </script>
+  <script src="bank.js"></script>
+</body>
+</html> 

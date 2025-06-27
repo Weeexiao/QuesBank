@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuesBank - 帮助</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <header class="bg-gradient-blue text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-list-alt mr-1"></i> 刷题模式
+        </a>
+        <a href="index.html#testNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-flask mr-1"></i> 测试模式
+        </a>
+        <a href="exam.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-pencil mr-1"></i> 考试模式
+        </a>
+        <a href="bank.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-book mr-1"></i> 题库
+        </a>
+        <a href="index.html#statsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-line-chart mr-1"></i> 统计
+        </a>
+        <a href="settings.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-cog mr-1"></i> 设置
+        </a>
+        <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
+          <i class="fa fa-question-circle mr-1"></i> 帮助
+        </a>
+      </nav>
+      <button class="md:hidden text-white text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-card p-6 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fa fa-question-circle text-primary mr-2"></i>
+        帮助与说明
+      </h2>
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-2">项目简介</h3>
+        <p>智能题库网页版（v1.1）是一个本地化题库管理与刷题、考试平台，支持AI生成题目、题库管理、刷题、考试等多种功能，适合教师和学生使用。</p>
+      </div>
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-2">主要功能</h3>
+        <ul class="list-disc pl-6 text-gray-700">
+          <li>AI 生成题目、手动输入题目、导入导出题库</li>
+          <li>题库本地管理（新建、重命名、删除、导入、导出）</li>
+          <li>刷题模式：自由刷题、查看解析、保存到题库</li>
+          <li>考试模式：多题库随机抽题、倒计时、自动评分、错题解析</li>
+          <li>题库详情：题目增删改查，支持多题型</li>
+          <li>支持批量导入、导出题库</li>
+        </ul>
+      </div>
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-2">页面导航</h3>
+        <ul class="list-disc pl-6 text-gray-700">
+          <li><b>刷题模式：</b>主页面，支持AI生成、手动输入、题库收藏</li>
+          <li><b>考试模式：</b>多题库抽题、倒计时、自动评分</li>
+          <li><b>题库管理：</b>题库的增删改查、导入导出、新建</li>
+          <li><b>题库详情：</b>题目增删改查</li>
+          <li><b>设置：</b>通用设置（预留）</li>
+        </ul>
+      </div>
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-2">常见问题</h3>
+        <ul class="list-disc pl-6 text-gray-700">
+          <li>导入题库时支持任意符合结构的JSON文件，无需特定文件名</li>
+          <li>AI 生成题目需配置API Key（可选）</li>
+          <li>所有数据均保存在本地浏览器，清理缓存会丢失数据</li>
+          <li>如遇页面空白或功能异常，请刷新页面或检查浏览器控制台</li>
+        </ul>
+      </div>
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-2">联系方式</h3>
+        <p>开发者：史智阳<br>邮箱：<a href="mailto:562052228@qq.com" class="text-primary underline">562052228@qq.com</a></p>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+      &copy; 2025 智能题库. 保留所有权利.
+    </div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const style = document.createElement('style');
+      style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html> 

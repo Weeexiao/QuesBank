@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuesBank - 考试模式</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-blue text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-list-alt mr-1"></i> 刷题模式
+        </a>
+        <a href="index.html#testNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-flask mr-1"></i> 测试模式
+        </a>
+        <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
+          <i class="fa fa-pencil mr-1"></i> 考试模式
+        </a>
+        <a href="index.html#bankNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-book mr-1"></i> 题库
+        </a>
+        <a href="index.html#statsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-line-chart mr-1"></i> 统计
+        </a>
+        <a href="index.html#settingsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-cog mr-1"></i> 设置
+        </a>
+        <a href="index.html#helpNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-question-circle mr-1"></i> 帮助
+        </a>
+      </nav>
+      <button class="md:hidden text-white text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <!-- 主内容区 -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-card p-6 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center">
+        <i class="fa fa-pencil text-primary mr-2"></i>
+        考试模式
+      </h2>
+      <!-- 题库选择区 -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">选择题库（可多选）</label>
+        <div id="bankList" class="flex flex-wrap gap-3"></div>
+      </div>
+      <!-- 考试参数设置区 -->
+      <div class="flex flex-col sm:flex-row gap-4 mb-6">
+        <div class="flex items-center gap-2">
+          <label class="block text-sm font-medium text-gray-700">题数</label>
+          <input id="examCount" type="number" min="1" value="10" class="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="block text-sm font-medium text-gray-700">考试时间(分钟)</label>
+          <input id="examTime" type="number" min="1" value="30" class="w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+        </div>
+        <div class="flex-1 flex items-center justify-center min-w-[120px]">
+          <button id="examActionBtn" class="exam-flip-btn">
+            <span class="front"><i class="fa fa-play mr-2"></i>开始考试</span>
+            <span class="back"><i class="fa fa-check mr-2"></i>提交</span>
+          </button>
+        </div>
+      </div>
+      <!-- 考试卡片区 -->
+      <div id="examArea" class="space-y-6"></div>
+      <!-- 提交与评分区 -->
+      <div id="examResult" class="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-lg hidden"></div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+      &copy; 2025 智能题库. 保留所有权利.
+    </div>
+  </footer>
+  <script src="exam.js"></script>
+  <style>
+  .exam-flip-btn {
+    position: relative;
+    width: 160px;
+    height: 48px;
+    background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 4px 16px 0 rgba(59,130,246,0.18);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    perspective: 400px;
+    transition: box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .exam-flip-btn:hover {
+    box-shadow: 0 8px 32px 0 rgba(59,130,246,0.25);
+  }
+  .exam-flip-btn .front,
+  .exam-flip-btn .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+    transition: transform 0.5s;
+  }
+  .exam-flip-btn .front {
+    transform: rotateY(0deg);
+  }
+  .exam-flip-btn .back {
+    transform: rotateY(180deg);
+  }
+  .exam-flip-btn.flipped .front {
+    transform: rotateY(-180deg);
+  }
+  .exam-flip-btn.flipped .back {
+    transform: rotateY(0deg);
+  }
+  </style>
+  <script>
+    // 修正导航栏渐变色样式
+    document.addEventListener('DOMContentLoaded', function() {
+      const style = document.createElement('style');
+      style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
+      document.head.appendChild(style);
+      // 题库按钮跳转
+      const bankNav = document.querySelector('a[href="#"] i.fa-book')?.parentElement;
+      if(bankNav){
+        bankNav.addEventListener('click', function(e){
+          e.preventDefault();
+          window.location.href = 'bank.html';
+        });
+      }
+      // 设置按钮跳转
+      const settingsNav = document.querySelector('a[href="#"] i.fa-cog')?.parentElement;
+      if(settingsNav){
+        settingsNav.addEventListener('click', function(e){
+          e.preventDefault();
+          window.location.href = 'settings.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

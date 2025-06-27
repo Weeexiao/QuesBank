@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能题库 - 功能测试</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .test-result {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 3px;
+    }
+    .success { background-color: #d4edda; color: #155724; }
+    .error { background-color: #f8d7da; color: #721c24; }
+    .info { background-color: #d1ecf1; color: #0c5460; }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="window.location.href='index.html'" style="position:fixed;top:20px;right:20px;z-index:1000;background:#3b82f6;color:#fff;padding:8px 18px;border-radius:6px;border:none;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer;">返回主页面</button>
+  <h1>智能题库 - 功能测试</h1>
+  
+  <div class="test-section">
+    <h2>1. JSON解析测试</h2>
+    <p>测试题目解析功能是否正常工作</p>
+    <textarea id="testJson" placeholder="输入测试JSON数据...">{
+  "选择题": [
+    {
+      "question": "测试选择题",
+      "options": ["A", "B", "C", "D"],
+      "answer": "A",
+      "explanation": "这是测试解析"
+    }
+  ],
+  "填空题": [
+    {
+      "question": "测试填空题，答案是(  )",
+      "answer": "测试",
+      "explanation": "这是测试解析"
+    }
+  ],
+  "判断题": [
+    {
+      "question": "测试判断题",
+      "answer": "正确",
+      "explanation": "这是测试解析"
+    }
+  ]
+}</textarea>
+    <button onclick="testJsonParsing()">测试JSON解析</button>
+    <div id="jsonResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. 本地存储测试</h2>
+    <p>测试localStorage功能是否正常工作</p>
+    <button onclick="testLocalStorage()">测试本地存储</button>
+    <div id="storageResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. API配置测试</h2>
+    <p>测试API配置是否正确</p>
+    <button onclick="testApiConfig()">测试API配置</button>
+    <div id="apiResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. 完整功能测试</h2>
+    <p>测试所有功能是否正常工作</p>
+    <button onclick="runFullTest()">运行完整测试</button>
+    <div id="fullTestResult"></div>
+  </div>
+
+  <script>
+    // 测试JSON解析功能
+    function testJsonParsing() {
+      const resultDiv = document.getElementById('jsonResult');
+      try {
+        const testData = document.getElementById('testJson').value;
+        const data = JSON.parse(testData);
+        
+        // 验证数据结构
+        const types = ["选择题", "填空题", "判断题"];
+        let isValid = true;
+        let message = "JSON解析成功！\n";
+        
+        types.forEach(type => {
+          if (data[type] && Array.isArray(data[type])) {
+            message += `✓ ${type}: ${data[type].length}题\n`;
+            data[type].forEach((q, index) => {
+              if (!q.question || !q.answer || !q.explanation) {
+                isValid = false;
+                message += `✗ ${type}第${index + 1}题缺少必要字段\n`;
+              }
+            });
+          }
+        });
+        
+        if (isValid) {
+          resultDiv.innerHTML = `<div class="test-result success">${message}</div>`;
+        } else {
+          resultDiv.innerHTML = `<div class="test-result error">${message}</div>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="test-result error">JSON解析失败: ${error.message}</div>`;
+      }
+    }
+
+    // 测试本地存储功能
+    function testLocalStorage() {
+      const resultDiv = document.getElementById('storageResult');
+      try {
+        // 测试写入
+        const testData = { test: "data", timestamp: Date.now() };
+        localStorage.setItem('testData', JSON.stringify(testData));
+        
+        // 测试读取
+        const readData = JSON.parse(localStorage.getItem('testData'));
+        
+        if (readData.test === testData.test) {
+          resultDiv.innerHTML = `<div class="test-result success">本地存储测试成功！</div>`;
+        } else {
+          resultDiv.innerHTML = `<div class="test-result error">本地存储数据不匹配</div>`;
+        }
+        
+        // 清理测试数据
+        localStorage.removeItem('testData');
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="test-result error">本地存储测试失败: ${error.message}</div>`;
+      }
+    }
+
+    // 测试API配置
+    function testApiConfig() {
+      const resultDiv = document.getElementById('apiResult');
+      const DEEPSEEK_ENDPOINT = "https://api.deepseek.com/v1/chat/completions";
+      const DEFAULT_KEY = "sk-91cc65bf381d435785c2aa5de135d67e";
+      
+      let message = "API配置检查:\n";
+      message += `✓ 端点: ${DEEPSEEK_ENDPOINT}\n`;
+      message += `✓ 默认Key: ${DEFAULT_KEY.substring(0, 10)}...\n`;
+      
+      // 检查fetch API是否可用
+      if (typeof fetch !== 'undefined') {
+        message += "✓ Fetch API 可用\n";
+      } else {
+        message += "✗ Fetch API 不可用\n";
+      }
+      
+      resultDiv.innerHTML = `<div class="test-result info">${message}</div>`;
+    }
+
+    // 完整功能测试
+    function runFullTest() {
+      const resultDiv = document.getElementById('fullTestResult');
+      let results = [];
+      
+      // 测试1: JSON解析
+      try {
+        const testData = document.getElementById('testJson').value;
+        JSON.parse(testData);
+        results.push("✓ JSON解析");
+      } catch (error) {
+        results.push("✗ JSON解析");
+      }
+      
+      // 测试2: 本地存储
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        results.push("✓ 本地存储");
+      } catch (error) {
+        results.push("✗ 本地存储");
+      }
+      
+      // 测试3: Fetch API
+      if (typeof fetch !== 'undefined') {
+        results.push("✓ Fetch API");
+      } else {
+        results.push("✗ Fetch API");
+      }
+      
+      // 测试4: 现代浏览器特性
+      if (typeof Promise !== 'undefined') {
+        results.push("✓ Promise支持");
+      } else {
+        results.push("✗ Promise支持");
+      }
+      
+      const message = results.join('\n');
+      const allPassed = results.every(r => r.startsWith('✓'));
+      
+      if (allPassed) {
+        resultDiv.innerHTML = `<div class="test-result success">所有测试通过！\n${message}</div>`;
+      } else {
+        resultDiv.innerHTML = `<div class="test-result error">部分测试失败:\n${message}</div>`;
+      }
+    }
+
+    // 页面加载时自动运行基础测试
+    window.addEventListener('load', () => {
+      testApiConfig();
+    });
+  </script>
+</body>
+</html> 
