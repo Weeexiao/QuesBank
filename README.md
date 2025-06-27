@@ -4,6 +4,10 @@
 开发者：史智阳  
 邮箱：562052228@qq.com
 
+## 在线体验
+
+🌐 **在线地址**: [https://weeexiao.github.io/QuesBank/](https://weeexiao.github.io/QuesBank/)
+
 ## 项目简介
 
 QuesBank 智能题库网页版是一个面向教师和学生的本地化题库管理与刷题、考试平台。支持题库的导入导出、AI 生成题目、题库管理、刷题模式、考试模式等多种功能，界面美观，交互友好。
@@ -136,3 +140,140 @@ npx http-server
 - 集成DeepSeek API
 - 实现本地题库管理
 - 添加导入导出功能 
+
+## 部署教程
+
+### 方法一：GitHub Pages 部署（推荐）
+
+1. **Fork 项目**
+   ```bash
+   # 点击右上角 Fork 按钮，将项目复制到你的 GitHub 账户
+   ```
+
+2. **启用 GitHub Pages**
+   - 进入你的仓库设置 (Settings)
+   - 找到 Pages 选项
+   - Source 选择 "Deploy from a branch"
+   - Branch 选择 "main" 或 "master"
+   - 保存设置
+
+3. **访问你的网站**
+   ```
+   https://你的用户名.github.io/QuesBank/
+   ```
+
+### 方法二：本地部署
+
+1. **下载项目**
+   ```bash
+   git clone https://github.com/Weeexiao/QuesBank.git
+   cd QuesBank
+   ```
+
+2. **使用本地服务器**
+   ```bash
+   # 使用 Python 内置服务器
+   python -m http.server 8000
+   
+   # 或使用 Node.js 的 http-server
+   npx http-server -p 8000
+   
+   # 或使用 PHP 内置服务器
+   php -S localhost:8000
+   ```
+
+3. **访问网站**
+   ```
+   http://localhost:8000
+   ```
+
+### 方法三：Vercel 部署
+
+1. **注册 Vercel**
+   - 访问 [vercel.com](https://vercel.com) 注册账户
+
+2. **导入项目**
+   - 点击 "New Project"
+   - 选择 "Import Git Repository"
+   - 选择你的 QuesBank 仓库
+
+3. **自动部署**
+   - Vercel 会自动检测并部署
+   - 获得一个 `.vercel.app` 域名
+
+### 方法四：Netlify 部署
+
+1. **注册 Netlify**
+   - 访问 [netlify.com](https://netlify.com) 注册账户
+
+2. **部署项目**
+   - 点击 "New site from Git"
+   - 选择你的 QuesBank 仓库
+   - 选择分支和构建设置
+
+3. **自定义域名**
+   - 获得一个 `.netlify.app` 域名
+   - 可绑定自定义域名
+
+## 技术栈
+
+- **前端**: HTML5, CSS3, JavaScript (ES6+)
+- **样式**: Tailwind CSS
+- **图标**: Font Awesome
+- **AI API**: DeepSeek API
+- **存储**: LocalStorage
+
+## 页面导航
+
+- **刷题模式**: 主要功能页面，支持题目输入和答题
+- **测试模式**: 功能测试页面
+- **考试模式**: 模拟考试环境
+- **题库管理**: 题库的增删改查
+- **设置**: 系统配置
+- **帮助**: 使用说明
+
+## 开发说明
+
+### 项目结构
+```
+QuesBank/
+├── index.html          # 主页面（刷题模式）
+├── exam.html           # 考试模式页面
+├── bank.html           # 题库管理页面
+├── bank_detail.html    # 题库详情页面
+├── settings.html       # 设置页面
+├── help.html           # 帮助页面
+├── exam.js             # 考试模式逻辑
+├── bank.js             # 题库管理逻辑
+├── bank_detail.js      # 题库详情逻辑
+└── README.md           # 项目说明
+```
+
+### 本地开发
+1. 克隆项目到本地
+2. 使用本地服务器运行（避免 CORS 问题）
+3. 修改代码后刷新页面查看效果
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+
+## 联系方式
+
+- 项目地址: [https://github.com/Weeexiao/QuesBank](https://github.com/Weeexiao/QuesBank)
+- 在线体验: [https://weeexiao.github.io/QuesBank/](https://weeexiao.github.io/QuesBank/)
+- 邮箱: 562052228@qq.com
+
+---
+
+⭐ 如果这个项目对你有帮助，请给个 Star 支持一下！ 
