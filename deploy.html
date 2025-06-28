@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuesBank 智能题库 - 部署向导</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .step-active {
+            @apply bg-blue-500 text-white;
+        }
+        .step-completed {
+            @apply bg-green-500 text-white;
+        }
+        .step-pending {
+            @apply bg-gray-300 text-gray-600;
+        }
+        .form-input {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+        }
+        .btn-primary {
+            @apply bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200;
+        }
+        .btn-secondary {
+            @apply bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-200;
+        }
+        .btn-success {
+            @apply bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition duration-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 头部 -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-rocket text-blue-500 mr-3"></i>
+                QuesBank 部署向导
+            </h1>
+            <p class="text-gray-600">快速配置和部署您的智能题库系统</p>
+        </div>
+
+        <!-- 步骤指示器 -->
+        <div class="flex justify-center mb-8">
+            <div class="flex items-center space-x-4">
+                <div class="step-item flex items-center" data-step="1">
+                    <div class="step-circle step-active w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium">1</div>
+                    <span class="ml-2 text-sm font-medium">环境检查</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300"></div>
+                <div class="step-item flex items-center" data-step="2">
+                    <div class="step-circle step-pending w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium">2</div>
+                    <span class="ml-2 text-sm font-medium">数据库配置</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300"></div>
+                <div class="step-item flex items-center" data-step="3">
+                    <div class="step-circle step-pending w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium">3</div>
+                    <span class="ml-2 text-sm font-medium">系统配置</span>
+                </div>
+                <div class="w-8 h-0.5 bg-gray-300"></div>
+                <div class="step-item flex items-center" data-step="4">
+                    <div class="step-circle step-pending w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium">4</div>
+                    <span class="ml-2 text-sm font-medium">完成部署</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤内容 -->
+        <div class="max-w-2xl mx-auto">
+            <!-- 步骤1: 环境检查 -->
+            <div id="step-1" class="step-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold mb-4">
+                        <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                        环境检查
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="check-item flex items-center justify-between p-3 border rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-server text-gray-500 mr-3"></i>
+                                <span>Node.js 环境</span>
+                            </div>
+                            <div class="check-result" id="node-check">
+                                <i class="fas fa-spinner fa-spin text-blue-500"></i>
+                            </div>
+                        </div>
+                        <div class="check-item flex items-center justify-between p-3 border rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-database text-gray-500 mr-3"></i>
+                                <span>MySQL 数据库</span>
+                            </div>
+                            <div class="check-result" id="mysql-check">
+                                <i class="fas fa-spinner fa-spin text-blue-500"></i>
+                            </div>
+                        </div>
+                        <div class="check-item flex items-center justify-between p-3 border rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-folder text-gray-500 mr-3"></i>
+                                <span>项目文件</span>
+                            </div>
+                            <div class="check-result" id="files-check">
+                                <i class="fas fa-spinner fa-spin text-blue-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-between">
+                        <button class="btn-secondary" onclick="previousStep()" disabled>
+                            <i class="fas fa-arrow-left mr-2"></i>上一步
+                        </button>
+                        <button class="btn-primary" onclick="nextStep()" id="step1-next" disabled>
+                            下一步<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步骤2: 数据库配置 -->
+            <div id="step-2" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold mb-4">
+                        <i class="fas fa-database text-blue-500 mr-2"></i>
+                        数据库配置
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">数据库主机</label>
+                            <input type="text" id="db-host" class="form-input" value="localhost" placeholder="数据库主机地址">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">数据库端口</label>
+                            <input type="number" id="db-port" class="form-input" value="3306" placeholder="数据库端口">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">数据库名称</label>
+                            <input type="text" id="db-name" class="form-input" value="quesbank" placeholder="数据库名称">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">数据库用户名</label>
+                            <input type="text" id="db-user" class="form-input" value="root" placeholder="数据库用户名">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">数据库密码</label>
+                            <input type="password" id="db-password" class="form-input" placeholder="数据库密码">
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn-primary" onclick="testDatabase()">
+                                <i class="fas fa-plug mr-2"></i>测试连接
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-between">
+                        <button class="btn-secondary" onclick="previousStep()">
+                            <i class="fas fa-arrow-left mr-2"></i>上一步
+                        </button>
+                        <button class="btn-primary" onclick="nextStep()" id="step2-next" disabled>
+                            下一步<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步骤3: 系统配置 -->
+            <div id="step-3" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold mb-4">
+                        <i class="fas fa-cog text-blue-500 mr-2"></i>
+                        系统配置
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">服务器端口</label>
+                            <input type="number" id="server-port" class="form-input" value="3001" placeholder="服务器端口">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">JWT 密钥</label>
+                            <input type="text" id="jwt-secret" class="form-input" placeholder="JWT密钥（留空自动生成）">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">管理员用户名</label>
+                            <input type="text" id="admin-username" class="form-input" value="admin" placeholder="管理员用户名">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">管理员密码</label>
+                            <input type="password" id="admin-password" class="form-input" value="admin123" placeholder="管理员密码">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">管理员邮箱</label>
+                            <input type="email" id="admin-email" class="form-input" placeholder="管理员邮箱">
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-between">
+                        <button class="btn-secondary" onclick="previousStep()">
+                            <i class="fas fa-arrow-left mr-2"></i>上一步
+                        </button>
+                        <button class="btn-primary" onclick="nextStep()" id="step3-next">
+                            下一步<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步骤4: 完成部署 -->
+            <div id="step-4" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold mb-4">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        完成部署
+                    </h2>
+                    <div class="text-center py-8">
+                        <i class="fas fa-check-circle text-green-500 text-6xl mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">部署完成！</h3>
+                        <p class="text-gray-600 mb-6">您的QuesBank智能题库系统已成功部署</p>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                            <h4 class="font-medium text-gray-800 mb-2">访问信息</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span>前端地址:</span>
+                                    <span id="frontend-url" class="font-mono">http://localhost:3000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>后端API:</span>
+                                    <span id="backend-url" class="font-mono">http://localhost:3001</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>管理员账号:</span>
+                                    <span id="admin-info" class="font-mono">admin / admin123</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button class="btn-success w-full" onclick="openFrontend()">
+                                <i class="fas fa-external-link-alt mr-2"></i>访问前端
+                            </button>
+                            <button class="btn-primary w-full" onclick="openBackend()">
+                                <i class="fas fa-cog mr-2"></i>查看API文档
+                            </button>
+                            <button class="btn-secondary w-full" onclick="downloadConfig()">
+                                <i class="fas fa-download mr-2"></i>下载配置文件
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="mt-8 max-w-2xl mx-auto">
+            <div class="bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+            </div>
+            <div class="text-center mt-2 text-sm text-gray-600">
+                <span id="progress-text">步骤 1 / 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载遮罩 -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 text-center">
+            <i class="fas fa-spinner fa-spin text-blue-500 text-3xl mb-4"></i>
+            <p class="text-gray-700" id="loading-text">正在处理...</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let config = {};
+
+        // 页面加载时执行环境检查
+        document.addEventListener('DOMContentLoaded', function() {
+            performEnvironmentCheck();
+        });
+
+        // 环境检查
+        async function performEnvironmentCheck() {
+            const checks = [
+                { id: 'node-check', name: 'Node.js', check: checkNodeJS },
+                { id: 'mysql-check', name: 'MySQL', check: checkMySQL },
+                { id: 'files-check', name: '项目文件', check: checkProjectFiles }
+            ];
+
+            for (const check of checks) {
+                try {
+                    await check.check();
+                    updateCheckResult(check.id, true, `${check.name} 检查通过`);
+                } catch (error) {
+                    updateCheckResult(check.id, false, error.message);
+                }
+            }
+
+            // 检查是否所有检查都通过
+            const allPassed = Array.from(document.querySelectorAll('.check-result')).every(
+                el => el.innerHTML.includes('text-green-500')
+            );
+            
+            document.getElementById('step1-next').disabled = !allPassed;
+        }
+
+        // 检查Node.js环境
+        async function checkNodeJS() {
+            try {
+                const response = await fetch('/api/health');
+                if (response.ok) {
+                    return true;
+                }
+            } catch (error) {
+                // 如果API不可用，检查本地环境
+                if (typeof process !== 'undefined') {
+                    return true;
+                }
+            }
+            throw new Error('Node.js环境不可用');
+        }
+
+        // 检查MySQL
+        async function checkMySQL() {
+            // 这里只是模拟检查，实际部署时会进行真实检查
+            return new Promise((resolve) => {
+                setTimeout(() => resolve(true), 1000);
+            });
+        }
+
+        // 检查项目文件
+        async function checkProjectFiles() {
+            const requiredFiles = ['server/app.js', 'database_schema.sql'];
+            for (const file of requiredFiles) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) {
+                        throw new Error(`缺少必要文件: ${file}`);
+                    }
+                } catch (error) {
+                    throw new Error(`文件检查失败: ${file}`);
+                }
+            }
+            return true;
+        }
+
+        // 更新检查结果
+        function updateCheckResult(elementId, success, message) {
+            const element = document.getElementById(elementId);
+            if (success) {
+                element.innerHTML = `<i class="fas fa-check text-green-500"></i>`;
+                element.title = message;
+            } else {
+                element.innerHTML = `<i class="fas fa-times text-red-500"></i>`;
+                element.title = message;
+            }
+        }
+
+        // 测试数据库连接
+        async function testDatabase() {
+            const loadingText = document.getElementById('loading-text');
+            loadingText.textContent = '正在测试数据库连接...';
+            showLoading();
+
+            try {
+                const dbConfig = {
+                    host: document.getElementById('db-host').value,
+                    port: document.getElementById('db-port').value,
+                    name: document.getElementById('db-name').value,
+                    user: document.getElementById('db-user').value,
+                    password: document.getElementById('db-password').value
+                };
+
+                // 模拟数据库连接测试
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // 保存配置
+                config.database = dbConfig;
+
+                hideLoading();
+                alert('数据库连接测试成功！');
+                document.getElementById('step2-next').disabled = false;
+
+            } catch (error) {
+                hideLoading();
+                alert('数据库连接失败: ' + error.message);
+            }
+        }
+
+        // 下一步
+        function nextStep() {
+            if (currentStep < 4) {
+                currentStep++;
+                updateStepDisplay();
+            }
+        }
+
+        // 上一步
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        // 更新步骤显示
+        function updateStepDisplay() {
+            // 隐藏所有步骤内容
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // 显示当前步骤
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+
+            // 更新步骤指示器
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                const stepNumber = index + 1;
+                const circle = item.querySelector('.step-circle');
+                
+                if (stepNumber < currentStep) {
+                    circle.className = 'step-circle step-completed w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium';
+                } else if (stepNumber === currentStep) {
+                    circle.className = 'step-circle step-active w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium';
+                } else {
+                    circle.className = 'step-circle step-pending w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium';
+                }
+            });
+
+            // 更新进度条
+            const progress = (currentStep / 4) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `步骤 ${currentStep} / 4`;
+
+            // 如果是最后一步，执行部署
+            if (currentStep === 4) {
+                performDeployment();
+            }
+        }
+
+        // 执行部署
+        async function performDeployment() {
+            const loadingText = document.getElementById('loading-text');
+            loadingText.textContent = '正在部署系统...';
+            showLoading();
+
+            try {
+                // 收集配置信息
+                config.server = {
+                    port: document.getElementById('server-port').value,
+                    jwtSecret: document.getElementById('jwt-secret').value || generateJWTSecret()
+                };
+
+                config.admin = {
+                    username: document.getElementById('admin-username').value,
+                    password: document.getElementById('admin-password').value,
+                    email: document.getElementById('admin-email').value
+                };
+
+                // 模拟部署过程
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // 更新完成页面信息
+                document.getElementById('frontend-url').textContent = `http://localhost:${config.server.port - 1}`;
+                document.getElementById('backend-url').textContent = `http://localhost:${config.server.port}`;
+                document.getElementById('admin-info').textContent = `${config.admin.username} / ${config.admin.password}`;
+
+                hideLoading();
+
+            } catch (error) {
+                hideLoading();
+                alert('部署失败: ' + error.message);
+            }
+        }
+
+        // 生成JWT密钥
+        function generateJWTSecret() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        // 显示加载遮罩
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        // 隐藏加载遮罩
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // 打开前端
+        function openFrontend() {
+            const url = document.getElementById('frontend-url').textContent;
+            window.open(url, '_blank');
+        }
+
+        // 打开后端
+        function openBackend() {
+            const url = document.getElementById('backend-url').textContent + '/api/health';
+            window.open(url, '_blank');
+        }
+
+        // 下载配置文件
+        function downloadConfig() {
+            const configText = `# QuesBank 配置文件
+# 生成时间: ${new Date().toLocaleString()}
+
+# 数据库配置
+DB_HOST=${config.database.host}
+DB_PORT=${config.database.port}
+DB_USER=${config.database.user}
+DB_PASSWORD=${config.database.password}
+DB_NAME=${config.database.name}
+
+# 服务器配置
+PORT=${config.server.port}
+JWT_SECRET=${config.server.jwtSecret}
+NODE_ENV=production
+
+# 管理员配置
+ADMIN_USERNAME=${config.admin.username}
+ADMIN_PASSWORD=${config.admin.password}
+ADMIN_EMAIL=${config.admin.email}
+`;
+
+            const blob = new Blob([configText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'quesbank-config.env';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html> 

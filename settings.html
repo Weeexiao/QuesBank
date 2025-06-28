@@ -17,25 +17,37 @@
       </div>
       <nav class="hidden md:flex space-x-6">
         <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-home mr-1"></i> 主页
+        </a>
+        <a href="practice.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-list-alt mr-1"></i> 刷题模式
         </a>
-        <a href="index.html#testNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+        <a href="test.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-flask mr-1"></i> 测试模式
         </a>
         <a href="exam.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-pencil mr-1"></i> 考试模式
         </a>
-        <a href="index.html#bankNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+        <a href="bank.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-book mr-1"></i> 题库
         </a>
-        <a href="index.html#statsNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+        <a href="stats.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-line-chart mr-1"></i> 统计
         </a>
         <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
           <i class="fa fa-cog mr-1"></i> 设置
         </a>
-        <a href="index.html#helpNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+        <a href="help.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
           <i class="fa fa-question-circle mr-1"></i> 帮助
+        </a>
+        <a href="admin.html" id="adminNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center hidden">
+          <i class="fa fa-users mr-1"></i> 用户管理
+        </a>
+        <a href="#" id="logoutNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center hidden">
+          <i class="fa fa-sign-out mr-1"></i> 退出
+        </a>
+        <a href="login.html" id="loginNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
+          <i class="fa fa-sign-in mr-1"></i> 登录
         </a>
       </nav>
       <button class="md:hidden text-white text-xl">
@@ -65,13 +77,42 @@
       style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
       document.head.appendChild(style);
       // 题库按钮跳转
-      const bankNav = document.querySelector('a[href=\"#\"] i.fa-book')?.parentElement;
+      const bankNav = document.querySelector('a[href="#"] i.fa-book')?.parentElement;
       if(bankNav){
         bankNav.addEventListener('click', function(e){
           e.preventDefault();
           window.location.href = 'bank.html';
         });
       }
+      
+      // 用户管理相关事件
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      const adminNav = document.getElementById('adminNav');
+      const logoutNav = document.getElementById('logoutNav');
+      const loginNav = document.getElementById('loginNav');
+      
+      // 检查用户权限并显示相应按钮
+      if (currentUser) {
+        logoutNav.classList.remove('hidden');
+        loginNav.classList.add('hidden');
+        
+        if (currentUser.role === 'admin') {
+          adminNav.classList.remove('hidden');
+        }
+      } else {
+        logoutNav.classList.add('hidden');
+        loginNav.classList.remove('hidden');
+        adminNav.classList.add('hidden');
+      }
+      
+      // 退出登录
+      logoutNav.addEventListener('click', e => {
+        e.preventDefault();
+        localStorage.removeItem('currentUser');
+        // 显示简单的退出提示
+        alert('已安全退出系统');
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>
