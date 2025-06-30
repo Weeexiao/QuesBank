@@ -6,6 +6,7 @@
     <title>QuesBank - 用户管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="js/navbar.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -23,47 +24,116 @@
     </script>
 </head>
 <body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <!-- 顶部导航栏 -->
-    <header class="bg-gradient-blue text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa fa-graduation-cap text-2xl"></i>
-                <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+    <!-- 优化后的导航栏 -->
+    <header class="fixed w-full top-0 z-50" id="navbar">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo区域 -->
+                <a href="index.html" class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fa fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">QuesBank</h1>
+                        <p class="logo-subtitle">智能题库系统</p>
+                    </div>
+                </a>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+                    <a href="index.html" class="nav-link">
+                        <i class="fa fa-home"></i>主页
+                    </a>
+                    <a href="practice.html" class="nav-link">
+                        <i class="fa fa-list-alt"></i>刷题模式
+                    </a>
+                    <a href="test.html" class="nav-link">
+                        <i class="fa fa-flask"></i>测试模式
+                    </a>
+                    <a href="exam.html" class="nav-link">
+                        <i class="fa fa-pencil"></i>考试模式
+                    </a>
+                    <a href="bank.html" class="nav-link">
+                        <i class="fa fa-book"></i>题库
+                    </a>
+                    <a href="stats.html" class="nav-link">
+                        <i class="fa fa-line-chart"></i>统计
+                    </a>
+                    <a href="settings.html" class="nav-link">
+                        <i class="fa fa-cog"></i>设置
+                    </a>
+                    <a href="help.html" class="nav-link">
+                        <i class="fa fa-question-circle"></i>帮助
+                    </a>
+                </nav>
+                
+                <!-- 用户操作区域 -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <span id="userStatus" class="user-status"></span>
+                        <a href="#" class="nav-link active">
+                            <i class="fa fa-users"></i>用户管理
+                        </a>
+                        <a href="#" id="logoutBtn" class="nav-link logout-link">
+                            <i class="fa fa-sign-out"></i>退出
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="menu-toggle" id="menuBtn">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
             </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-home mr-1"></i> 主页
-                </a>
-                <a href="practice.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-list-alt mr-1"></i> 刷题模式
-                </a>
-                <a href="exam.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-pencil mr-1"></i> 考试模式
-                </a>
-                <a href="bank.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-book mr-1"></i> 题库
-                </a>
-                <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
-                    <i class="fa fa-users mr-1"></i> 用户管理
-                </a>
-                <a href="settings.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-cog mr-1"></i> 设置
-                </a>
-                <a href="help.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-question-circle mr-1"></i> 帮助
-                </a>
-                <a href="#" id="logoutBtn" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-                    <i class="fa fa-sign-out mr-1"></i> 退出
-                </a>
-            </nav>
-            <button class="md:hidden text-white text-xl">
-                <i class="fa fa-bars"></i>
-            </button>
+            
+            <!-- 移动端导航菜单 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="px-4 py-6 space-y-4">
+                    <div class="mobile-nav-grid">
+                        <a href="index.html" class="mobile-nav-item">
+                            <i class="fa fa-home"></i>主页
+                        </a>
+                        <a href="practice.html" class="mobile-nav-item">
+                            <i class="fa fa-list-alt"></i>刷题模式
+                        </a>
+                        <a href="test.html" class="mobile-nav-item">
+                            <i class="fa fa-flask"></i>测试模式
+                        </a>
+                        <a href="exam.html" class="mobile-nav-item">
+                            <i class="fa fa-pencil"></i>考试模式
+                        </a>
+                        <a href="bank.html" class="mobile-nav-item">
+                            <i class="fa fa-book"></i>题库
+                        </a>
+                        <a href="stats.html" class="mobile-nav-item">
+                            <i class="fa fa-line-chart"></i>统计
+                        </a>
+                        <a href="settings.html" class="mobile-nav-item">
+                            <i class="fa fa-cog"></i>设置
+                        </a>
+                        <a href="help.html" class="mobile-nav-item">
+                            <i class="fa fa-question-circle"></i>帮助
+                        </a>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="text-center">
+                            <span id="mobileUserStatusText" class="user-status"></span>
+                        </div>
+                        <a href="#" class="mobile-nav-item active">
+                            <i class="fa fa-users"></i>用户管理
+                        </a>
+                        <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link">
+                            <i class="fa fa-sign-out"></i>退出登录
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- 主内容区 -->
-    <main class="flex-grow container mx-auto px-4 py-8">
+    <main class="flex-grow container mx-auto px-4 py-8 mt-20">
         <!-- 页面标题 -->
         <div class="bg-white rounded-xl shadow-card p-6 mb-6">
             <div class="flex justify-between items-center">
@@ -209,14 +279,10 @@
         </div>
     </footer>
 
+    <!-- 导航栏脚本 -->
+    <script src="js/navbar.js"></script>
+    
     <script>
-        // 修正导航栏渐变色样式
-        document.addEventListener('DOMContentLoaded', function() {
-            const style = document.createElement('style');
-            style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
-            document.head.appendChild(style);
-        });
-
         // 检查管理员权限
         function checkAdminPermission() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
@@ -261,240 +327,36 @@
             }, 3000);
         }
 
-        // 加载用户数据
-        function loadUsers() {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+        // 页面加载时检查权限
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAdminPermission()) {
+                return;
+            }
+            
+            // 显示当前用户信息
             const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            
-            // 更新统计信息
-            document.getElementById('totalUsers').textContent = users.length;
-            document.getElementById('activeUsers').textContent = users.filter(u => u.lastLogin).length;
-            document.getElementById('adminUsers').textContent = users.filter(u => u.role === 'admin').length;
-            
-            // 计算本月新增用户
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const newUsers = users.filter(u => {
-                const userDate = new Date(u.createdAt);
-                return userDate.getMonth() === currentMonth && userDate.getFullYear() === currentYear;
-            }).length;
-            document.getElementById('newUsers').textContent = newUsers;
-            
-            // 显示当前用户
             if (currentUser) {
                 document.getElementById('currentUserDisplay').textContent = currentUser.username;
             }
             
-            // 渲染用户表格
-            renderUserTable(users);
-        }
-
-        // 渲染用户表格
-        function renderUserTable(users) {
-            const tbody = document.getElementById('userTableBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const roleFilter = document.getElementById('roleFilter').value;
-            
-            // 过滤用户
-            let filteredUsers = users.filter(user => {
-                const matchesSearch = user.username.toLowerCase().includes(searchTerm) || 
-                                    (user.email && user.email.toLowerCase().includes(searchTerm));
-                const matchesRole = !roleFilter || user.role === roleFilter;
-                return matchesSearch && matchesRole;
+            // 绑定退出按钮事件
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentUser');
+                showNotification('已退出', '您已安全退出系统', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
             });
             
-            tbody.innerHTML = '';
-            
-            filteredUsers.forEach(user => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50';
-                
-                const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '从未登录';
-                const createdAt = new Date(user.createdAt).toLocaleString();
-                const status = user.lastLogin ? '在线' : '离线';
-                
-                row.innerHTML = `
-                    <td class="px-4 py-3">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
-                                ${user.username.charAt(0).toUpperCase()}
-                            </div>
-                            <span class="font-medium">${user.username}</span>
-                        </div>
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                            user.role === 'admin' ? 'bg-red-100 text-red-800' :
-                            user.role === 'user' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
-                        }">
-                            ${user.role === 'admin' ? '管理员' : user.role === 'user' ? '用户' : '游客'}
-                        </span>
-                    </td>
-                    <td class="px-4 py-3 text-sm text-gray-600">${user.email || '-'}</td>
-                    <td class="px-4 py-3 text-sm text-gray-600">${createdAt}</td>
-                    <td class="px-4 py-3 text-sm text-gray-600">${lastLogin}</td>
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                            status === '在线' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }">
-                            ${status}
-                        </span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <div class="flex space-x-2">
-                            <button onclick="viewUserDetail('${user.username}')" 
-                                    class="text-blue-600 hover:text-blue-800 text-sm">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                            ${user.role !== 'admin' ? `
-                                <button onclick="deleteUser('${user.username}')" 
-                                        class="text-red-600 hover:text-red-800 text-sm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                    </td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-
-        // 查看用户详情
-        function viewUserDetail(username) {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.username === username);
-            
-            if (!user) {
-                showNotification('错误', '用户不存在', 'error');
-                return;
-            }
-            
-            const modal = document.getElementById('userDetailModal');
-            const content = document.getElementById('userDetailContent');
-            
-            content.innerHTML = `
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                            ${user.username.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold">${user.username}</h4>
-                            <p class="text-gray-600">${user.email || '未设置邮箱'}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">角色</label>
-                            <p class="mt-1 text-sm text-gray-900">${user.role === 'admin' ? '管理员' : user.role === 'user' ? '普通用户' : '游客'}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">注册时间</label>
-                            <p class="mt-1 text-sm text-gray-900">${new Date(user.createdAt).toLocaleString()}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">最后登录</label>
-                            <p class="mt-1 text-sm text-gray-900">${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '从未登录'}</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">状态</label>
-                            <p class="mt-1 text-sm text-gray-900">${user.lastLogin ? '活跃' : '离线'}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t pt-4">
-                        <h5 class="font-medium mb-2">用户数据统计</h5>
-                        <div class="grid grid-cols-3 gap-4 text-center">
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <div class="text-2xl font-bold text-primary">0</div>
-                                <div class="text-sm text-gray-600">题库数量</div>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <div class="text-2xl font-bold text-primary">0</div>
-                                <div class="text-sm text-gray-600">题目数量</div>
-                            </div>
-                            <div class="bg-gray-50 rounded-lg p-3">
-                                <div class="text-2xl font-bold text-primary">0</div>
-                                <div class="text-sm text-gray-600">考试次数</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            modal.classList.remove('hidden');
-        }
-
-        // 删除用户
-        function deleteUser(username) {
-            if (!confirm(`确定要删除用户 "${username}" 吗？此操作不可恢复。`)) {
-                return;
-            }
-            
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const updatedUsers = users.filter(u => u.username !== username);
-            
-            localStorage.setItem('users', JSON.stringify(updatedUsers));
-            
-            showNotification('删除成功', `用户 "${username}" 已被删除`, 'success');
-            loadUsers();
-        }
-
-        // 导出用户数据
-        function exportUsers() {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const dataStr = JSON.stringify(users, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = `quesbank_users_${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            showNotification('导出成功', '用户数据已导出', 'success');
-        }
-
-        // 退出登录
-        function logout() {
-            localStorage.removeItem('currentUser');
-            showNotification('退出成功', '已安全退出系统', 'success');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1000);
-        }
-
-        // 事件监听
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!checkAdminPermission()) return;
-            
-            loadUsers();
-            
-            // 搜索和过滤
-            document.getElementById('searchInput').addEventListener('input', loadUsers);
-            document.getElementById('roleFilter').addEventListener('change', loadUsers);
-            
-            // 刷新按钮
-            document.getElementById('refreshBtn').addEventListener('click', loadUsers);
-            
-            // 导出按钮
-            document.getElementById('exportUsersBtn').addEventListener('click', exportUsers);
-            
-            // 退出按钮
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-            
-            // 关闭模态框
-            document.getElementById('closeUserDetailModal').addEventListener('click', () => {
-                document.getElementById('userDetailModal').classList.add('hidden');
-            });
-            
-            // 点击模态框背景关闭
-            document.getElementById('userDetailModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('userDetailModal')) {
-                    document.getElementById('userDetailModal').classList.add('hidden');
-                }
+            // 绑定移动端退出按钮事件
+            document.getElementById('mobileLogoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentUser');
+                showNotification('已退出', '您已安全退出系统', 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
             });
         });
     </script>

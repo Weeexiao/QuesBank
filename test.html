@@ -3,105 +3,246 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>智能题库 - 功能测试</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      line-height: 1.6;
+  <title>QuesBank - 测试模式</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="js/navbar.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#06b6d4',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
     }
-    .test-section {
-      margin: 20px 0;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .test-result {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 3px;
-    }
-    .success { background-color: #d4edda; color: #155724; }
-    .error { background-color: #f8d7da; color: #721c24; }
-    .info { background-color: #d1ecf1; color: #0c5460; }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 3px;
-      cursor: pointer;
-      margin: 5px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin: 10px 0;
-    }
-  </style>
+  </script>
 </head>
-<body>
-  <button onclick="window.location.href='index.html'" style="position:fixed;top:20px;right:20px;z-index:1000;background:#3b82f6;color:#fff;padding:8px 18px;border-radius:6px;border:none;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer;">返回主页面</button>
-  <h1>智能题库 - 功能测试</h1>
-  
-  <div class="test-section">
-    <h2>1. JSON解析测试</h2>
-    <p>测试题目解析功能是否正常工作</p>
-    <textarea id="testJson" placeholder="输入测试JSON数据...">{
-  "选择题": [
-    {
-      "question": "测试选择题",
-      "options": ["A", "B", "C", "D"],
-      "answer": "A",
-      "explanation": "这是测试解析"
-    }
-  ],
-  "填空题": [
-    {
-      "question": "测试填空题，答案是(  )",
-      "answer": "测试",
-      "explanation": "这是测试解析"
-    }
-  ],
-  "判断题": [
-    {
-      "question": "测试判断题",
-      "answer": "正确",
-      "explanation": "这是测试解析"
-    }
-  ]
-}</textarea>
-    <button onclick="testJsonParsing()">测试JSON解析</button>
-    <div id="jsonResult"></div>
-  </div>
+<body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- 优化后的导航栏 -->
+  <header class="fixed w-full top-0 z-50" id="navbar">
+    <div class="navbar-container">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo区域 -->
+        <a href="index.html" class="logo-container">
+          <div class="logo-icon">
+            <i class="fa fa-graduation-cap text-xl"></i>
+          </div>
+          <div class="logo-text">
+            <h1 class="logo-title">QuesBank</h1>
+            <p class="logo-subtitle">智能题库系统</p>
+          </div>
+        </a>
+        
+        <!-- 桌面导航 -->
+        <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+          <a href="index.html" class="nav-link">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="practice.html" class="nav-link">
+            <i class="fa fa-list-alt mr-2"></i>刷题模式
+          </a>
+          <a href="test.html" class="nav-link active">
+            <i class="fa fa-flask mr-2"></i>功能测试
+          </a>
+          <a href="exam.html" class="nav-link">
+            <i class="fa fa-pencil mr-2"></i>考试模式
+          </a>
+          <a href="bank.html" class="nav-link">
+            <i class="fa fa-book mr-2"></i>题库
+          </a>
+          <a href="help.html" class="nav-link">
+            <i class="fa fa-question-circle mr-2"></i>帮助
+          </a>
+          <a href="readme.html" class="nav-link">
+            <i class="fa fa-file-text mr-2"></i>官方文档
+          </a>
+          <a href="api.html" class="nav-link">
+            <i class="fa fa-code mr-2"></i>API文档
+          </a>
+        </nav>
+        
+        <!-- 用户操作区域 -->
+        <div class="hidden lg:flex items-center space-x-3 user-actions">
+          <span id="userStatus" class="user-status"></span>
+          <a href="admin.html" id="adminLink" class="nav-link hidden">
+            <i class="fa fa-cog mr-1"></i>管理
+          </a>
+          <a href="#" id="logoutBtn" class="nav-link logout-link hidden">
+            <i class="fa fa-sign-out mr-1"></i>退出
+          </a>
+          <a href="login.html" id="loginBtn" class="nav-link">
+            <i class="fa fa-sign-in mr-1"></i>登录
+          </a>
+        </div>
+      </div>
+      
+      <!-- 移动端菜单按钮 -->
+      <button class="menu-toggle" id="menuBtn">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="px-4 py-6 space-y-4">
+        <div class="mobile-nav-grid">
+          <a href="index.html" class="mobile-nav-item">
+            <i class="fa fa-home mr-3"></i>首页
+          </a>
+          <a href="practice.html" class="mobile-nav-item">
+            <i class="fa fa-list-alt mr-3"></i>刷题模式
+          </a>
+          <a href="test.html" class="mobile-nav-item active">
+            <i class="fa fa-flask mr-3"></i>功能测试
+          </a>
+          <a href="exam.html" class="mobile-nav-item">
+            <i class="fa fa-pencil mr-3"></i>考试模式
+          </a>
+          <a href="bank.html" class="mobile-nav-item">
+            <i class="fa fa-book mr-3"></i>题库
+          </a>
+          <a href="help.html" class="mobile-nav-item">
+            <i class="fa fa-question-circle mr-3"></i>帮助
+          </a>
+          <a href="readme.html" class="mobile-nav-item">
+            <i class="fa fa-file-text mr-3"></i>官方文档
+          </a>
+          <a href="api.html" class="mobile-nav-item">
+            <i class="fa fa-code mr-3"></i>API文档
+          </a>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="text-center">
+            <span id="mobileUserStatusText" class="user-status"></span>
+          </div>
+          <a href="admin.html" id="mobileAdminLink" class="mobile-nav-item hidden">
+            <i class="fa fa-cog mr-2"></i>管理
+          </a>
+          <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link hidden">
+            <i class="fa fa-sign-out mr-2"></i>退出登录
+          </a>
+          <a href="login.html" id="mobileLoginBtn" class="mobile-nav-item">
+            <i class="fa fa-sign-in mr-2"></i>登录系统
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <div class="test-section">
-    <h2>2. 本地存储测试</h2>
-    <p>测试localStorage功能是否正常工作</p>
-    <button onclick="testLocalStorage()">测试本地存储</button>
-    <div id="storageResult"></div>
-  </div>
+  <!-- 主内容区 -->
+  <main class="flex-grow container mx-auto px-4 py-8 mt-20">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+        <h1 class="text-3xl font-bold mb-6 flex items-center">
+          <i class="fa fa-flask text-primary mr-3"></i>
+          智能题库 - 功能测试
+        </h1>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- JSON解析测试 -->
+          <div class="bg-gray-50 rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+              <i class="fa fa-code text-info mr-2"></i>
+              JSON解析测试
+            </h2>
+            <p class="text-gray-600 mb-4">测试题目解析功能是否正常工作</p>
+            <textarea id="testJson" class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200" placeholder="输入测试JSON数据..."></textarea>
+            <div class="flex gap-2 mt-3">
+              <button onclick="testJsonParsing()" class="bg-info hover:bg-info/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex items-center">
+                <i class="fa fa-play mr-2"></i>测试JSON解析
+              </button>
+              <button onclick="loadTestExample()" class="bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex items-center">
+                <i class="fa fa-lightbulb-o mr-2"></i>加载示例
+              </button>
+            </div>
+            <div id="jsonResult" class="mt-3"></div>
+          </div>
 
-  <div class="test-section">
-    <h2>3. API配置测试</h2>
-    <p>测试API配置是否正确</p>
-    <button onclick="testApiConfig()">测试API配置</button>
-    <div id="apiResult"></div>
-  </div>
+          <!-- 本地存储测试 -->
+          <div class="bg-gray-50 rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+              <i class="fa fa-database text-warning mr-2"></i>
+              本地存储测试
+            </h2>
+            <p class="text-gray-600 mb-4">测试localStorage功能是否正常工作</p>
+            <button onclick="testLocalStorage()" class="bg-warning hover:bg-warning/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex items-center">
+              <i class="fa fa-database mr-2"></i>测试本地存储
+            </button>
+            <div id="storageResult" class="mt-3"></div>
+          </div>
 
-  <div class="test-section">
-    <h2>4. 完整功能测试</h2>
-    <p>测试所有功能是否正常工作</p>
-    <button onclick="runFullTest()">运行完整测试</button>
-    <div id="fullTestResult"></div>
-  </div>
+          <!-- API配置测试 -->
+          <div class="bg-gray-50 rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+              <i class="fa fa-cog text-secondary mr-2"></i>
+              API配置测试
+            </h2>
+            <p class="text-gray-600 mb-4">测试API配置是否正确</p>
+            <button onclick="testApiConfig()" class="bg-secondary hover:bg-secondary/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex items-center">
+              <i class="fa fa-cog mr-2"></i>测试API配置
+            </button>
+            <div id="apiResult" class="mt-3"></div>
+          </div>
+
+          <!-- 完整功能测试 -->
+          <div class="bg-gray-50 rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+              <i class="fa fa-check-circle text-success mr-2"></i>
+              完整功能测试
+            </h2>
+            <p class="text-gray-600 mb-4">测试所有功能是否正常工作</p>
+            <button onclick="runFullTest()" class="bg-success hover:bg-success/90 text-white py-2 px-4 rounded-lg transition-all duration-200 flex items-center">
+              <i class="fa fa-check-circle mr-2"></i>运行完整测试
+            </button>
+            <div id="fullTestResult" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script>
+    // 加载测试示例
+    function loadTestExample() {
+      const testJson = document.getElementById('testJson');
+      const exampleData = {
+        "选择题": [
+          {
+            "question": "测试选择题",
+            "options": ["A", "B", "C", "D"],
+            "answer": "A",
+            "explanation": "这是测试解析"
+          }
+        ],
+        "填空题": [
+          {
+            "question": "测试填空题，答案是(  )",
+            "answer": "测试",
+            "explanation": "这是测试解析"
+          }
+        ],
+        "判断题": [
+          {
+            "question": "测试判断题",
+            "answer": "正确",
+            "explanation": "这是测试解析"
+          }
+        ]
+      };
+      testJson.value = JSON.stringify(exampleData, null, 2);
+    }
+
     // 测试JSON解析功能
     function testJsonParsing() {
       const resultDiv = document.getElementById('jsonResult');
@@ -112,27 +253,27 @@
         // 验证数据结构
         const types = ["选择题", "填空题", "判断题"];
         let isValid = true;
-        let message = "JSON解析成功！\n";
+        let message = "JSON解析成功！<br>";
         
         types.forEach(type => {
           if (data[type] && Array.isArray(data[type])) {
-            message += `✓ ${type}: ${data[type].length}题\n`;
+            message += `✓ ${type}: ${data[type].length}题<br>`;
             data[type].forEach((q, index) => {
               if (!q.question || !q.answer || !q.explanation) {
                 isValid = false;
-                message += `✗ ${type}第${index + 1}题缺少必要字段\n`;
+                message += `✗ ${type}第${index + 1}题缺少必要字段<br>`;
               }
             });
           }
         });
         
         if (isValid) {
-          resultDiv.innerHTML = `<div class="test-result success">${message}</div>`;
+          resultDiv.innerHTML = `<div class="p-3 bg-green-100 text-green-800 rounded-lg">${message}</div>`;
         } else {
-          resultDiv.innerHTML = `<div class="test-result error">${message}</div>`;
+          resultDiv.innerHTML = `<div class="p-3 bg-red-100 text-red-800 rounded-lg">${message}</div>`;
         }
       } catch (error) {
-        resultDiv.innerHTML = `<div class="test-result error">JSON解析失败: ${error.message}</div>`;
+        resultDiv.innerHTML = `<div class="p-3 bg-red-100 text-red-800 rounded-lg">JSON解析失败: ${error.message}</div>`;
       }
     }
 
@@ -148,15 +289,15 @@
         const readData = JSON.parse(localStorage.getItem('testData'));
         
         if (readData.test === testData.test) {
-          resultDiv.innerHTML = `<div class="test-result success">本地存储测试成功！</div>`;
+          resultDiv.innerHTML = `<div class="p-3 bg-green-100 text-green-800 rounded-lg">本地存储测试成功！</div>`;
         } else {
-          resultDiv.innerHTML = `<div class="test-result error">本地存储数据不匹配</div>`;
+          resultDiv.innerHTML = `<div class="p-3 bg-red-100 text-red-800 rounded-lg">本地存储数据不匹配</div>`;
         }
         
         // 清理测试数据
         localStorage.removeItem('testData');
       } catch (error) {
-        resultDiv.innerHTML = `<div class="test-result error">本地存储测试失败: ${error.message}</div>`;
+        resultDiv.innerHTML = `<div class="p-3 bg-red-100 text-red-800 rounded-lg">本地存储测试失败: ${error.message}</div>`;
       }
     }
 
@@ -166,18 +307,18 @@
       const DEEPSEEK_ENDPOINT = "https://api.deepseek.com/v1/chat/completions";
       const DEFAULT_KEY = "sk-91cc65bf381d435785c2aa5de135d67e";
       
-      let message = "API配置检查:\n";
-      message += `✓ 端点: ${DEEPSEEK_ENDPOINT}\n`;
-      message += `✓ 默认Key: ${DEFAULT_KEY.substring(0, 10)}...\n`;
+      let message = "API配置检查:<br>";
+      message += `✓ 端点: ${DEEPSEEK_ENDPOINT}<br>`;
+      message += `✓ 默认Key: ${DEFAULT_KEY.substring(0, 10)}...<br>`;
       
       // 检查fetch API是否可用
       if (typeof fetch !== 'undefined') {
-        message += "✓ Fetch API 可用\n";
+        message += "✓ Fetch API 可用<br>";
       } else {
-        message += "✗ Fetch API 不可用\n";
+        message += "✗ Fetch API 不可用<br>";
       }
       
-      resultDiv.innerHTML = `<div class="test-result info">${message}</div>`;
+      resultDiv.innerHTML = `<div class="p-3 bg-blue-100 text-blue-800 rounded-lg">${message}</div>`;
     }
 
     // 完整功能测试
@@ -210,27 +351,31 @@
         results.push("✗ Fetch API");
       }
       
-      // 测试4: 现代浏览器特性
-      if (typeof Promise !== 'undefined') {
-        results.push("✓ Promise支持");
-      } else {
-        results.push("✗ Promise支持");
+      // 测试4: DOM操作
+      try {
+        document.getElementById('testJson');
+        results.push("✓ DOM操作");
+      } catch (error) {
+        results.push("✗ DOM操作");
       }
       
-      const message = results.join('\n');
-      const allPassed = results.every(r => r.startsWith('✓'));
+      const successCount = results.filter(r => r.startsWith('✓')).length;
+      const totalCount = results.length;
       
-      if (allPassed) {
-        resultDiv.innerHTML = `<div class="test-result success">所有测试通过！\n${message}</div>`;
+      let message = `完整测试结果 (${successCount}/${totalCount}):<br>`;
+      results.forEach(result => {
+        message += `${result}<br>`;
+      });
+      
+      if (successCount === totalCount) {
+        resultDiv.innerHTML = `<div class="p-3 bg-green-100 text-green-800 rounded-lg">${message}</div>`;
       } else {
-        resultDiv.innerHTML = `<div class="test-result error">部分测试失败:\n${message}</div>`;
+        resultDiv.innerHTML = `<div class="p-3 bg-yellow-100 text-yellow-800 rounded-lg">${message}</div>`;
       }
     }
-
-    // 页面加载时自动运行基础测试
-    window.addEventListener('load', () => {
-      testApiConfig();
-    });
   </script>
+  
+  <!-- 导航栏脚本 -->
+  <script src="js/navbar.js"></script>
 </body>
 </html> 

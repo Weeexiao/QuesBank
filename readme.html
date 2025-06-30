@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuesBank - 官方文档</title>
+    <meta name="description" content="QuesBank官方文档 - 全面的题库管理和学习工具使用指南">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    
+    <!-- 导航栏样式 -->
+    <link rel="stylesheet" href="js/navbar.css">
+    
+    <style>
+        .prose {
+            max-width: none;
+        }
+        .prose h1 {
+            color: #1f2937;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .prose h2 {
+            color: #374151;
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .prose h3 {
+            color: #4b5563;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose p {
+            color: #6b7280;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .prose ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .prose ol {
+            list-style-type: decimal;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .prose li {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        .prose code {
+            background-color: #f3f4f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+        }
+        .prose pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .prose pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        .prose blockquote {
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #6b7280;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .prose th, .prose td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .prose th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        .prose img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .toc {
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        .toc-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #6b7280;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .toc-link:hover {
+            color: #3b82f6;
+            background-color: #f3f4f6;
+            border-left-color: #3b82f6;
+        }
+        .toc-link.active {
+            color: #3b82f6;
+            background-color: #eff6ff;
+            border-left-color: #3b82f6;
+            font-weight: 600;
+        }
+        .badge-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge { display: inline-flex; align-items: center; padding: 0 10px; height: 24px; border-radius: 6px; font-size: 13px; font-weight: 500; background: #222; color: #fff; }
+        .badge-green { background: #4caf50; }
+        .badge-gray { background: #444; }
+        .badge-blue { background: #2196f3; }
+        .badge-violet { background: #7c3aed; }
+        .badge-orange { background: #ff9800; }
+        .badge-discord { background: linear-gradient(90deg,#5865F2,#5865F2 60%,#7289da 100%); }
+        .badge i { margin-right: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- LOGO展示区 -->
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+      <div style="width:48px;height:48px;background:linear-gradient(135deg,#3B82F6 60%,#1E40AF 100%);border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px #0001;">
+        <img src="image/bank.png" alt="QuesBank Logo" style="width:32px;height:32px;display:block;"/>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <span style="font-size:1.7rem;font-weight:bold;background:linear-gradient(90deg,#3B82F6,#1E40AF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">QuesBank</span>
+        <span style="font-size:1rem;color:#666;">智能题库系统</span>
+      </div>
+    </div>
+
+    <!-- 项目徽章条 -->
+    <div class="badge-bar" style="margin-bottom: 24px;">
+      <span class="badge badge-green">PRs welcome</span>
+      <span class="badge badge-gray">first-timers-only</span>
+      <span class="badge badge-blue">friendly</span>
+      <span class="badge badge-violet">code helpers 704</span>
+      <span class="badge badge-orange"><i class="fa fa-cogs"></i> setup automated</span>
+      <span class="badge badge-discord"><i class="fa fa-discord"></i> Discord 2.8k online</span>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="fixed w-full top-0 z-50" id="navbar">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo区域 -->
+                <a href="index.html" class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fa fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">QuesBank</h1>
+                        <p class="logo-subtitle">智能题库系统</p>
+                    </div>
+                </a>
+                
+                <!-- 桌面导航 -->
+                        <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+        <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+          <a href="index.html" class="nav-link">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="practice.html" class="nav-link">
+            <i class="fa fa-list-alt mr-2"></i>刷题模式
+          </a>
+          <a href="test.html" class="nav-link">
+            <i class="fa fa-flask mr-2"></i>功能测试
+          </a>
+          <a href="exam.html" class="nav-link">
+            <i class="fa fa-pencil mr-2"></i>考试模式
+          </a>
+          <a href="bank.html" class="nav-link">
+            <i class="fa fa-book mr-2"></i>题库
+          </a>
+          <a href="help.html" class="nav-link">
+            <i class="fa fa-question-circle mr-2"></i>帮助
+          </a>
+          <a href="readme.html" class="nav-link active">
+            <i class="fa fa-file-text mr-2"></i>官方文档
+          </a>
+          <a href="api.html" class="nav-link">
+            <i class="fa fa-code mr-2"></i>API文档
+          </a>
+        </nav>
+                
+                <!-- 用户操作区域 -->
+                        <!-- 用户操作区域 -->
+        <div class="hidden lg:flex items-center space-x-3 user-actions">
+          <span id="userStatus" class="user-status"></span>
+          <a href="admin.html" id="adminLink" class="nav-link hidden">
+            <i class="fa fa-cog mr-1"></i>管理
+          </a>
+          <a href="#" id="logoutBtn" class="nav-link logout-link hidden">
+            <i class="fa fa-sign-out mr-1"></i>退出
+          </a>
+          <a href="login.html" id="loginBtn" class="nav-link">
+            <i class="fa fa-sign-in mr-1"></i>登录
+          </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="menu-toggle" id="menuBtn">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="px-4 py-6 space-y-4">
+                                                                      <div class="mobile-nav-grid">
+            <a href="index.html" class="mobile-nav-item">
+              <i class="fa fa-home mr-3"></i>首页
+            </a>
+            <a href="practice.html" class="mobile-nav-item">
+              <i class="fa fa-list-alt mr-3"></i>刷题模式
+            </a>
+            <a href="test.html" class="mobile-nav-item">
+              <i class="fa fa-flask mr-3"></i>功能测试
+            </a>
+            <a href="exam.html" class="mobile-nav-item">
+              <i class="fa fa-pencil mr-3"></i>考试模式
+            </a>
+            <a href="bank.html" class="mobile-nav-item">
+              <i class="fa fa-book mr-3"></i>题库
+            </a>
+            <a href="help.html" class="mobile-nav-item">
+              <i class="fa fa-question-circle mr-3"></i>帮助
+            </a>
+            <a href="readme.html" class="mobile-nav-item active">
+              <i class="fa fa-file-text mr-3"></i>官方文档
+            </a>
+            <a href="api.html" class="mobile-nav-item">
+              <i class="fa fa-code mr-3"></i>API文档
+            </a>
+          </div>
+                    
+                    <div class="space-y-3">
+                        <div class="text-center">
+                            <span id="mobileUserStatusText" class="user-status"></span>
+                        </div>
+                        <a href="admin.html" id="mobileAdminLink" class="mobile-nav-item hidden">
+                            <i class="fa fa-cog mr-2"></i>管理
+                        </a>
+                        <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link hidden">
+                            <i class="fa fa-sign-out mr-2"></i>退出登录
+                        </a>
+                        <a href="login.html" id="mobileLoginBtn" class="mobile-nav-item">
+                            <i class="fa fa-sign-in mr-2"></i>登录系统
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="mt-16 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- 侧边栏目录 -->
+                <div class="lg:col-span-1">
+                    <div class="toc bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-800">目录</h3>
+                        <nav class="space-y-1">
+                            <a href="#introduction" class="toc-link">项目介绍</a>
+                            <a href="#features" class="toc-link">功能特性</a>
+                            <a href="#installation" class="toc-link">安装部署</a>
+                            <a href="#usage" class="toc-link">使用指南</a>
+                            <a href="#api" class="toc-link">API接口</a>
+                            <a href="#database" class="toc-link">数据库</a>
+                            <a href="#deployment" class="toc-link">部署说明</a>
+                            <a href="#updates" class="toc-link">更新日志</a>
+                            <a href="#contributing" class="toc-link">贡献指南</a>
+                            <a href="#license" class="toc-link">许可证</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- 主内容 -->
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-lg shadow-md p-8 prose">
+                        <h1>QuesBank 官方文档</h1>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            QuesBank是一个功能强大的题库管理和学习工具，支持多种题型、智能刷题、模拟考试等功能。
+                            本文档将详细介绍项目的功能特性、安装部署、使用方法和API接口。
+                        </p>
+
+                        <section id="introduction">
+                            <h2>项目介绍</h2>
+                            <p>
+                                QuesBank是一个基于Web的题库管理系统，专为教师和学生设计。它提供了完整的题库管理功能，
+                                包括题目录入、分类管理、智能刷题、模拟考试等，帮助用户更高效地进行学习和教学。
+                            </p>
+                            
+                            <h3>主要特点</h3>
+                            <ul>
+                                <li><strong>多题型支持</strong>：支持单选题、多选题、判断题、填空题等多种题型</li>
+                                <li><strong>智能刷题</strong>：根据学习进度智能推荐题目，提高学习效率</li>
+                                <li><strong>模拟考试</strong>：支持随机抽题、倒计时、自动评分等功能</li>
+                                <li><strong>数据管理</strong>：支持题库导入导出、备份恢复等操作</li>
+                                <li><strong>响应式设计</strong>：完美适配PC和移动端设备</li>
+                            </ul>
+                        </section>
+
+                        <section id="features">
+                            <h2>功能特性</h2>
+                            
+                            <h3>题库管理</h3>
+                            <ul>
+                                <li>支持手动输入题目和AI自动生成题目</li>
+                                <li>题库分类管理，支持多级分类</li>
+                                <li>题目导入导出，支持多种格式</li>
+                                <li>题目编辑、删除、批量操作</li>
+                            </ul>
+
+                            <h3>学习功能</h3>
+                            <ul>
+                                <li>智能刷题模式，根据掌握程度推荐题目</li>
+                                <li>错题本功能，自动收集错题</li>
+                                <li>学习进度跟踪，可视化学习数据</li>
+                                <li>题目收藏功能，方便复习</li>
+                            </ul>
+
+                            <h3>考试功能</h3>
+                            <ul>
+                                <li>模拟考试模式，支持随机抽题</li>
+                                <li>考试时间设置，倒计时提醒</li>
+                                <li>自动评分和成绩分析</li>
+                                <li>考试记录保存和查看</li>
+                            </ul>
+
+                            <h3>用户管理</h3>
+                            <ul>
+                                <li>用户注册登录系统</li>
+                                <li>角色权限管理（学生/教师/管理员）</li>
+                                <li>个人资料管理</li>
+                                <li>学习数据统计</li>
+                            </ul>
+                        </section>
+
+                        <section id="installation">
+                            <h2>安装部署</h2>
+                            
+                            <h3>环境要求</h3>
+                            <ul>
+                                <li>Web服务器（Apache/Nginx）</li>
+                                <li>PHP 7.4+</li>
+                                <li>MySQL 5.7+ 或 MariaDB 10.2+</li>
+                                <li>现代浏览器（Chrome、Firefox、Safari、Edge）</li>
+                            </ul>
+
+                            <h3>快速安装</h3>
+                            <ol>
+                                <li>下载项目文件到Web服务器目录</li>
+                                <li>导入数据库结构（参考 <code>database_schema.sql</code>）</li>
+                                <li>配置数据库连接（修改 <code>js/api.js</code>）</li>
+                                <li>访问 <code>index.html</code> 开始使用</li>
+                            </ol>
+
+                            <h3>宝塔面板部署</h3>
+                            <p>如果使用宝塔面板，可以参考 <code>宝塔面板部署指南.md</code> 进行快速部署。</p>
+                        </section>
+
+                        <section id="usage">
+                            <h2>使用指南</h2>
+                            
+                            <h3>基本使用流程</h3>
+                            <ol>
+                                <li><strong>导入或创建题库</strong>：进入刷题模式，手动输入或AI生成题目</li>
+                                <li><strong>管理题库</strong>：在题库页面进行新建、编辑、删除等操作</li>
+                                <li><strong>开始学习</strong>：选择题库进行刷题或模拟考试</li>
+                                <li><strong>查看进度</strong>：在统计页面查看学习数据和进度</li>
+                            </ol>
+
+                            <h3>详细操作说明</h3>
+                            <p>更多详细的使用说明，请参考 <a href="help.html" class="text-primary hover:underline">帮助页面</a>。</p>
+                        </section>
+
+                        <section id="api">
+                            <h2>API接口</h2>
+                            <p>
+                                QuesBank提供了完整的RESTful API接口，支持题库管理、用户认证、数据统计等功能。
+                                详细的API文档请参考 <a href="api.html" class="text-primary hover:underline">API文档页面</a>。
+                            </p>
+                            
+                            <h3>主要接口</h3>
+                            <ul>
+                                <li><strong>用户管理</strong>：注册、登录、权限验证</li>
+                                <li><strong>题库管理</strong>：CRUD操作、导入导出</li>
+                                <li><strong>题目管理</strong>：题目增删改查、分类管理</li>
+                                <li><strong>学习数据</strong>：进度跟踪、成绩统计</li>
+                            </ul>
+                        </section>
+
+                        <section id="database">
+                            <h2>数据库</h2>
+                            <p>
+                                项目使用MySQL数据库存储数据，主要包含用户、题库、题目、学习记录等表。
+                                详细的数据库结构请参考 <code>database_schema.sql</code> 文件。
+                            </p>
+                            
+                            <h3>主要数据表</h3>
+                            <ul>
+                                <li><code>users</code> - 用户信息表</li>
+                                <li><code>question_banks</code> - 题库表</li>
+                                <li><code>questions</code> - 题目表</li>
+                                <li><code>user_progress</code> - 学习进度表</li>
+                                <li><code>exam_records</code> - 考试记录表</li>
+                            </ul>
+                        </section>
+
+                        <section id="deployment">
+                            <h2>部署说明</h2>
+                            
+                            <h3>本地部署</h3>
+                            <p>参考 <code>本地测试指南.md</code> 进行本地环境搭建和测试。</p>
+                            
+                            <h3>服务器部署</h3>
+                            <p>参考 <code>数据库部署说明.md</code> 进行服务器端部署。</p>
+                            
+                            <h3>一键部署</h3>
+                            <p>使用提供的批处理文件或Shell脚本进行快速部署：</p>
+                            <ul>
+                                <li><code>QuesBank启动器.bat</code> - Windows快速启动</li>
+                                <li><code>宝塔一键部署.sh</code> - 宝塔面板一键部署</li>
+                            </ul>
+                        </section>
+
+                        <section id="updates">
+                            <h2>更新日志</h2>
+                            
+                            <h3>v1.3.0 (2025-06-30)</h3>
+                            <ul>
+                                <li>全面优化导航栏系统，实现统一、现代化、响应式设计</li>
+                                <li>新增毛玻璃效果、渐变色彩、圆角设计，提升视觉体验</li>
+                                <li>完善移动端适配，支持触摸友好的汉堡菜单</li>
+                                <li>为所有页面添加统一导航栏，修复遮挡问题</li>
+                                <li>优化用户状态管理和权限控制，提升交互体验</li>
+                                <li>重构test.html页面，采用现代化设计风格</li>
+                            </ul>
+
+                            <h3>v1.2.0 (2025-06-15)</h3>
+                            <ul>
+                                <li>新增AI题目生成功能，支持根据知识点自动生成题目</li>
+                                <li>优化考试模式，增加考试时间设置和自动评分功能</li>
+                                <li>改进用户界面，提升视觉体验和交互效果</li>
+                            </ul>
+                        </section>
+
+                        <section id="contributing">
+                            <h2>贡献指南</h2>
+                            <p>
+                                欢迎为QuesBank项目贡献代码！如果您发现了bug或有新的功能建议，请通过以下方式参与：
+                            </p>
+                            <ul>
+                                <li>提交Issue报告bug或建议新功能</li>
+                                <li>Fork项目并提交Pull Request</li>
+                                <li>完善文档和测试用例</li>
+                                <li>分享使用经验和最佳实践</li>
+                            </ul>
+                        </section>
+
+                        <section id="license">
+                            <h2>许可证</h2>
+                            <p>
+                                QuesBank采用MIT许可证，您可以自由使用、修改和分发本项目。
+                                详细信息请参考项目根目录下的LICENSE文件。
+                            </p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏脚本 -->
+    <script src="js/navbar.js"></script>
+    
+    <script>
+        // 目录导航功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-link');
+            const sections = document.querySelectorAll('section[id]');
+            
+            // 滚动监听
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 150;
+                    const sectionHeight = section.clientHeight;
+                    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // 平滑滚动
+            tocLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 120,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

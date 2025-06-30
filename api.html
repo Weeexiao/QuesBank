@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuesBank - API文档</title>
+    <meta name="description" content="QuesBank API接口文档 - 完整的RESTful API使用指南">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    
+    <!-- 导航栏样式 -->
+    <link rel="stylesheet" href="js/navbar.css">
+    
+    <style>
+        .api-section { margin-bottom: 3rem; }
+        .api-endpoint {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        .method.get { background: #dbeafe; color: #1d4ed8; }
+        .method.post { background: #dcfce7; color: #166534; }
+        .method.put { background: #fef3c7; color: #92400e; }
+        .method.delete { background: #fee2e2; color: #dc2626; }
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin: 0.5rem 0;
+            display: inline-block;
+        }
+        .code-block {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .response-example {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <header class="fixed w-full top-0 z-50" id="navbar">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo区域 -->
+                <a href="index.html" class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fa fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">QuesBank</h1>
+                        <p class="logo-subtitle">智能题库系统</p>
+                    </div>
+                </a>
+                
+                <!-- 桌面导航 -->
+                        <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+        <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+          <a href="index.html" class="nav-link">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="practice.html" class="nav-link">
+            <i class="fa fa-list-alt mr-2"></i>刷题模式
+          </a>
+          <a href="test.html" class="nav-link">
+            <i class="fa fa-flask mr-2"></i>功能测试
+          </a>
+          <a href="exam.html" class="nav-link">
+            <i class="fa fa-pencil mr-2"></i>考试模式
+          </a>
+          <a href="bank.html" class="nav-link">
+            <i class="fa fa-book mr-2"></i>题库
+          </a>
+          <a href="help.html" class="nav-link">
+            <i class="fa fa-question-circle mr-2"></i>帮助
+          </a>
+          <a href="readme.html" class="nav-link">
+            <i class="fa fa-file-text mr-2"></i>官方文档
+          </a>
+          <a href="api.html" class="nav-link active">
+            <i class="fa fa-code mr-2"></i>API文档
+          </a>
+        </nav>
+                
+                <!-- 用户操作区域 -->
+                        <!-- 用户操作区域 -->
+        <div class="hidden lg:flex items-center space-x-3 user-actions">
+          <span id="userStatus" class="user-status"></span>
+          <a href="admin.html" id="adminLink" class="nav-link hidden">
+            <i class="fa fa-cog mr-1"></i>管理
+          </a>
+          <a href="#" id="logoutBtn" class="nav-link logout-link hidden">
+            <i class="fa fa-sign-out mr-1"></i>退出
+          </a>
+          <a href="login.html" id="loginBtn" class="nav-link">
+            <i class="fa fa-sign-in mr-1"></i>登录
+          </a>
+                    </div>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="menu-toggle" id="menuBtn">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="px-4 py-6 space-y-4">
+                                                                      <div class="mobile-nav-grid">
+            <a href="index.html" class="mobile-nav-item">
+              <i class="fa fa-home mr-3"></i>首页
+            </a>
+            <a href="practice.html" class="mobile-nav-item">
+              <i class="fa fa-list-alt mr-3"></i>刷题模式
+            </a>
+            <a href="test.html" class="mobile-nav-item">
+              <i class="fa fa-flask mr-3"></i>功能测试
+            </a>
+            <a href="exam.html" class="mobile-nav-item">
+              <i class="fa fa-pencil mr-3"></i>考试模式
+            </a>
+            <a href="bank.html" class="mobile-nav-item">
+              <i class="fa fa-book mr-3"></i>题库
+            </a>
+            <a href="help.html" class="mobile-nav-item">
+              <i class="fa fa-question-circle mr-3"></i>帮助
+            </a>
+            <a href="readme.html" class="mobile-nav-item">
+              <i class="fa fa-file-text mr-3"></i>官方文档
+            </a>
+            <a href="api.html" class="mobile-nav-item active">
+              <i class="fa fa-code mr-3"></i>API文档
+            </a>
+          </div>
+                    
+                    <div class="space-y-3">
+                        <div class="text-center">
+                            <span id="mobileUserStatusText" class="user-status"></span>
+                        </div>
+                        <a href="admin.html" id="mobileAdminLink" class="mobile-nav-item hidden">
+                            <i class="fa fa-cog mr-2"></i>管理
+                        </a>
+                        <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link hidden">
+                            <i class="fa fa-sign-out mr-2"></i>退出登录
+                        </a>
+                        <a href="login.html" id="mobileLoginBtn" class="mobile-nav-item">
+                            <i class="fa fa-sign-in mr-2"></i>登录系统
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="mt-16 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h1 class="text-3xl font-bold mb-6 text-gray-800">QuesBank API 文档</h1>
+                
+                <p class="text-lg text-gray-600 mb-8">
+                    QuesBank提供了完整的RESTful API接口，支持题库管理、用户认证、学习进度跟踪等功能。
+                    本文档详细介绍了所有可用的API接口及其使用方法。
+                </p>
+
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-info-circle text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">
+                                <strong>基础URL:</strong> <code>http://your-domain.com/api/</code><br>
+                                <strong>数据格式:</strong> JSON<br>
+                                <strong>字符编码:</strong> UTF-8
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="api-section">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">认证方式</h2>
+                    <p class="text-gray-600 mb-4">
+                        除了登录和注册接口外，其他所有接口都需要进行身份认证。
+                        认证方式采用Session机制，需要在请求头中包含有效的Session ID。
+                    </p>
+
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">登录认证</h3>
+                        <div class="mb-3">
+                            <span class="method post">POST</span>
+                            <div class="endpoint-url">/api/auth/login</div>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">请求参数</h4>
+                        <ul class="list-disc list-inside text-gray-600 mb-4">
+                            <li><strong>username</strong> (string, 必填) - 用户名</li>
+                            <li><strong>password</strong> (string, 必填) - 密码</li>
+                        </ul>
+
+                        <h4 class="font-semibold mb-2">请求示例</h4>
+                        <div class="code-block">
+                            <pre>{
+    "username": "admin",
+    "password": "123456"
+}</pre>
+                        </div>
+
+                        <h4 class="font-semibold mb-2">响应示例</h4>
+                        <div class="response-example">
+                            <pre>{
+    "code": 200,
+    "message": "登录成功",
+    "data": {
+        "user": {
+            "id": 1,
+            "username": "admin",
+            "role": "admin",
+            "email": "admin@example.com"
+        },
+        "session_id": "abc123def456"
+    }
+}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="api-section">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">用户管理</h2>
+                    
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">用户注册</h3>
+                        <div class="mb-3">
+                            <span class="method post">POST</span>
+                            <div class="endpoint-url">/api/auth/register</div>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">请求参数</h4>
+                        <ul class="list-disc list-inside text-gray-600 mb-4">
+                            <li><strong>username</strong> (string, 必填) - 用户名（3-20字符）</li>
+                            <li><strong>password</strong> (string, 必填) - 密码（6-20字符）</li>
+                            <li><strong>email</strong> (string, 必填) - 邮箱地址</li>
+                            <li><strong>role</strong> (string, 可选) - 用户角色（student/teacher/admin）</li>
+                        </ul>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">获取用户信息</h3>
+                        <div class="mb-3">
+                            <span class="method get">GET</span>
+                            <div class="endpoint-url">/api/user/profile</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="api-section">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">题库管理</h2>
+                    
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">获取题库列表</h3>
+                        <div class="mb-3">
+                            <span class="method get">GET</span>
+                            <div class="endpoint-url">/api/banks</div>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">查询参数</h4>
+                        <ul class="list-disc list-inside text-gray-600 mb-4">
+                            <li><strong>page</strong> (integer, 可选) - 页码（默认1）</li>
+                            <li><strong>limit</strong> (integer, 可选) - 每页数量（默认10）</li>
+                            <li><strong>search</strong> (string, 可选) - 搜索关键词</li>
+                        </ul>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">创建题库</h3>
+                        <div class="mb-3">
+                            <span class="method post">POST</span>
+                            <div class="endpoint-url">/api/banks</div>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">请求参数</h4>
+                        <ul class="list-disc list-inside text-gray-600 mb-4">
+                            <li><strong>name</strong> (string, 必填) - 题库名称</li>
+                            <li><strong>description</strong> (string, 可选) - 题库描述</li>
+                            <li><strong>category</strong> (string, 可选) - 题库分类</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="api-section">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">题目管理</h2>
+                    
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">获取题目列表</h3>
+                        <div class="mb-3">
+                            <span class="method get">GET</span>
+                            <div class="endpoint-url">/api/banks/{bank_id}/questions</div>
+                        </div>
+                    </div>
+
+                    <div class="api-endpoint">
+                        <h3 class="text-lg font-semibold mb-3">添加题目</h3>
+                        <div class="mb-3">
+                            <span class="method post">POST</span>
+                            <div class="endpoint-url">/api/banks/{bank_id}/questions</div>
+                        </div>
+                        
+                        <h4 class="font-semibold mb-2">请求参数</h4>
+                        <ul class="list-disc list-inside text-gray-600 mb-4">
+                            <li><strong>type</strong> (string, 必填) - 题目类型（single/multiple/true_false/fill）</li>
+                            <li><strong>content</strong> (string, 必填) - 题目内容</li>
+                            <li><strong>options</strong> (array, 可选) - 选项列表（选择题）</li>
+                            <li><strong>answer</strong> (string/array, 必填) - 正确答案</li>
+                            <li><strong>explanation</strong> (string, 可选) - 解析</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="api-section">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">错误码</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-200">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="border border-gray-200 px-4 py-2 text-left">错误码</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">说明</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">解决方案</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">200</td>
+                                    <td class="border border-gray-200 px-4 py-2">请求成功</td>
+                                    <td class="border border-gray-200 px-4 py-2">-</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">400</td>
+                                    <td class="border border-gray-200 px-4 py-2">请求参数错误</td>
+                                    <td class="border border-gray-200 px-4 py-2">检查请求参数格式和必填项</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">401</td>
+                                    <td class="border border-gray-200 px-4 py-2">未授权访问</td>
+                                    <td class="border border-gray-200 px-4 py-2">请先登录获取认证信息</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">403</td>
+                                    <td class="border border-gray-200 px-4 py-2">权限不足</td>
+                                    <td class="border border-gray-200 px-4 py-2">检查用户角色和权限</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">404</td>
+                                    <td class="border border-gray-200 px-4 py-2">资源不存在</td>
+                                    <td class="border border-gray-200 px-4 py-2">检查请求的资源ID是否正确</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-200 px-4 py-2">500</td>
+                                    <td class="border border-gray-200 px-4 py-2">服务器内部错误</td>
+                                    <td class="border border-gray-200 px-4 py-2">请联系管理员或稍后重试</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
+                        <h4 class="font-semibold mb-2 text-red-800">错误响应示例</h4>
+                        <div class="code-block">
+                            <pre>{
+    "code": 400,
+    "message": "参数错误",
+    "data": {
+        "errors": {
+            "username": ["用户名不能为空"],
+            "password": ["密码长度不能少于6位"]
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-600">
+                        更多详细的API接口信息，请参考 <a href="API接口文档.md" class="text-primary hover:underline">API接口文档.md</a> 文件。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏脚本 -->
+    <script src="js/navbar.js"></script>
+</body>
+</html> 

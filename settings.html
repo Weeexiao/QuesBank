@@ -6,57 +6,130 @@
   <title>QuesBank - 设置</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="js/navbar.css" rel="stylesheet">
 </head>
 <body class="font-inter bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-  <!-- 顶部导航栏 -->
-  <header class="bg-gradient-blue text-white shadow-lg">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <i class="fa fa-graduation-cap text-2xl"></i>
-        <h1 class="text-xl md:text-2xl font-bold text-shadow">QuesBank 智能题库</h1>
+  <!-- 优化后的导航栏 -->
+  <header class="fixed w-full top-0 z-50" id="navbar">
+    <div class="navbar-container">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo区域 -->
+        <a href="index.html" class="logo-container">
+          <div class="logo-icon">
+            <i class="fa fa-graduation-cap text-xl"></i>
+          </div>
+          <div class="logo-text">
+            <h1 class="logo-title">QuesBank</h1>
+            <p class="logo-subtitle">智能题库系统</p>
+          </div>
+        </a>
+        
+        <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+        <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+          <a href="index.html" class="nav-link">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="practice.html" class="nav-link">
+            <i class="fa fa-list-alt mr-2"></i>刷题模式
+          </a>
+          <a href="test.html" class="nav-link">
+            <i class="fa fa-flask mr-2"></i>功能测试
+          </a>
+          <a href="exam.html" class="nav-link">
+            <i class="fa fa-pencil mr-2"></i>考试模式
+          </a>
+          <a href="bank.html" class="nav-link">
+            <i class="fa fa-book mr-2"></i>题库
+          </a>
+          <a href="help.html" class="nav-link">
+            <i class="fa fa-question-circle mr-2"></i>帮助
+          </a>
+          <a href="readme.html" class="nav-link">
+            <i class="fa fa-file-text mr-2"></i>官方文档
+          </a>
+          <a href="api.html" class="nav-link">
+            <i class="fa fa-code mr-2"></i>API文档
+          </a>
+        </nav>
+        
+        <!-- 用户操作区域 -->
+                <!-- 用户操作区域 -->
+        <div class="hidden lg:flex items-center space-x-3 user-actions">
+          <span id="userStatus" class="user-status"></span>
+          <a href="admin.html" id="adminLink" class="nav-link hidden">
+            <i class="fa fa-cog mr-1"></i>管理
+          </a>
+          <a href="#" id="logoutBtn" class="nav-link logout-link hidden">
+            <i class="fa fa-sign-out mr-1"></i>退出
+          </a>
+          <a href="login.html" id="loginBtn" class="nav-link">
+            <i class="fa fa-sign-in mr-1"></i>登录
+          </a>
+          </div>
+        </div>
+        
+        <!-- 移动端菜单按钮 -->
+        <button class="menu-toggle" id="menuBtn">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
       </div>
-      <nav class="hidden md:flex space-x-6">
-        <a href="index.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-home mr-1"></i> 主页
-        </a>
-        <a href="practice.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-list-alt mr-1"></i> 刷题模式
-        </a>
-        <a href="test.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-flask mr-1"></i> 测试模式
-        </a>
-        <a href="exam.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-pencil mr-1"></i> 考试模式
-        </a>
-        <a href="bank.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-book mr-1"></i> 题库
-        </a>
-        <a href="stats.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-line-chart mr-1"></i> 统计
-        </a>
-        <a href="#" class="hover:text-blue-100 transition-colors duration-200 flex items-center font-bold underline">
-          <i class="fa fa-cog mr-1"></i> 设置
-        </a>
-        <a href="help.html" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-question-circle mr-1"></i> 帮助
-        </a>
-        <a href="admin.html" id="adminNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center hidden">
-          <i class="fa fa-users mr-1"></i> 用户管理
-        </a>
-        <a href="#" id="logoutNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center hidden">
-          <i class="fa fa-sign-out mr-1"></i> 退出
-        </a>
-        <a href="login.html" id="loginNav" class="hover:text-blue-100 transition-colors duration-200 flex items-center">
-          <i class="fa fa-sign-in mr-1"></i> 登录
-        </a>
-      </nav>
-      <button class="md:hidden text-white text-xl">
-        <i class="fa fa-bars"></i>
-      </button>
+      
+      <!-- 移动端导航菜单 -->
+      <div class="mobile-menu" id="mobileMenu">
+        <div class="px-4 py-6 space-y-4">
+                                                            <div class="mobile-nav-grid">
+            <a href="index.html" class="mobile-nav-item">
+              <i class="fa fa-home mr-3"></i>首页
+            </a>
+            <a href="practice.html" class="mobile-nav-item">
+              <i class="fa fa-list-alt mr-3"></i>刷题模式
+            </a>
+            <a href="test.html" class="mobile-nav-item">
+              <i class="fa fa-flask mr-3"></i>功能测试
+            </a>
+            <a href="exam.html" class="mobile-nav-item">
+              <i class="fa fa-pencil mr-3"></i>考试模式
+            </a>
+            <a href="bank.html" class="mobile-nav-item">
+              <i class="fa fa-book mr-3"></i>题库
+            </a>
+            <a href="help.html" class="mobile-nav-item">
+              <i class="fa fa-question-circle mr-3"></i>帮助
+            </a>
+            <a href="readme.html" class="mobile-nav-item">
+              <i class="fa fa-file-text mr-3"></i>官方文档
+            </a>
+            <a href="api.html" class="mobile-nav-item">
+              <i class="fa fa-code mr-3"></i>API文档
+            </a>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="text-center">
+              <span id="mobileUserStatusText" class="user-status"></span>
+            </div>
+            <a href="admin.html" id="mobileAdminLink" class="mobile-nav-item hidden">
+              <i class="fa fa-users"></i>用户管理
+            </a>
+            <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link hidden">
+              <i class="fa fa-sign-out"></i>退出登录
+            </a>
+            <a href="login.html" id="mobileLoginBtn" class="mobile-nav-item">
+              <i class="fa fa-sign-in"></i>登录系统
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
+
   <!-- 主内容区 -->
-  <main class="flex-grow container mx-auto px-4 py-8">
+  <main class="flex-grow container mx-auto px-4 py-8 mt-20">
     <div class="bg-white rounded-xl shadow-card p-6 mb-6">
       <h2 class="text-xl font-bold mb-4 flex items-center">
         <i class="fa fa-cog text-primary mr-2"></i>
@@ -65,55 +138,14 @@
       <div class="text-gray-500">这里可以添加通用设置项，例如主题、数据导出、API Key 等。</div>
     </div>
   </main>
+  
   <footer class="bg-gray-800 text-white py-6">
     <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
       &copy; 2025 智能题库. 保留所有权利.
     </div>
   </footer>
-  <script>
-    // 修正导航栏渐变色样式
-    document.addEventListener('DOMContentLoaded', function() {
-      const style = document.createElement('style');
-      style.innerHTML = `.bg-gradient-blue {background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;}`;
-      document.head.appendChild(style);
-      // 题库按钮跳转
-      const bankNav = document.querySelector('a[href="#"] i.fa-book')?.parentElement;
-      if(bankNav){
-        bankNav.addEventListener('click', function(e){
-          e.preventDefault();
-          window.location.href = 'bank.html';
-        });
-      }
-      
-      // 用户管理相关事件
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      const adminNav = document.getElementById('adminNav');
-      const logoutNav = document.getElementById('logoutNav');
-      const loginNav = document.getElementById('loginNav');
-      
-      // 检查用户权限并显示相应按钮
-      if (currentUser) {
-        logoutNav.classList.remove('hidden');
-        loginNav.classList.add('hidden');
-        
-        if (currentUser.role === 'admin') {
-          adminNav.classList.remove('hidden');
-        }
-      } else {
-        logoutNav.classList.add('hidden');
-        loginNav.classList.remove('hidden');
-        adminNav.classList.add('hidden');
-      }
-      
-      // 退出登录
-      logoutNav.addEventListener('click', e => {
-        e.preventDefault();
-        localStorage.removeItem('currentUser');
-        // 显示简单的退出提示
-        alert('已安全退出系统');
-        window.location.href = 'login.html';
-      });
-    });
-  </script>
+  
+  <!-- 导航栏脚本 -->
+  <script src="js/navbar.js"></script>
 </body>
 </html> 

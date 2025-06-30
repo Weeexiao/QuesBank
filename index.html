@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuesBank 智能题库网页版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="js/navbar.css" rel="stylesheet">
     <script>
         // Tailwind 配置
         tailwind.config = {
@@ -54,76 +55,218 @@
                 50% { transform: translateY(-20px); }
                 100% { transform: translateY(0px); }
             }
+            /* 导航栏优化样式 */
+            .nav-link {
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: linear-gradient(90deg, #165DFF, #36CFC9);
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
+            .nav-link:hover::after {
+                width: 100%;
+            }
+            .nav-link.active::after {
+                width: 100%;
+            }
+            .mobile-menu {
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+            .mobile-menu.open {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .menu-btn {
+                transition: all 0.3s ease;
+            }
+            .menu-btn.active {
+                transform: rotate(90deg);
+            }
+            .logo-icon.hero-logo {
+                transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+                cursor: pointer;
+                box-shadow: 0 8px 24px -4px #165DFF44, 0 2px 8px #36CFC944;
+                will-change: transform, box-shadow, background;
+            }
+            .logo-icon.hero-logo:hover {
+                transform: scale(1.15) rotate(-8deg);
+                background: linear-gradient(135deg, #165DFF 60%, #36CFC9 100%, #00FFD0 120%);
+                box-shadow: 0 16px 40px -6px #165DFF88, 0 4px 16px #36CFC988;
+                filter: brightness(1.15) drop-shadow(0 0 12px #36CFC9cc);
+            }
+            .logo-title.hero-hero, .hero-hero {
+                background: linear-gradient(90deg, #165DFF, #36CFC9, #00FFD0, #165DFF 90%);
+                background-size: 200% 100%;
+                background-position: 0 0;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                color: transparent;
+                transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+                filter: drop-shadow(0 2px 8px #36CFC966);
+                will-change: background-position, filter, transform;
+                cursor: pointer;
+                animation: gradient-move 3s linear infinite;
+            }
+            .logo-title.hero-hero:hover {
+                background-position: 100% 0;
+                filter: drop-shadow(0 0 16px #36CFC9cc) brightness(1.2);
+                transform: scale(1.08) skewX(-4deg) rotate(-2deg);
+                letter-spacing: 0.04em;
+            }
+            @keyframes gradient-move {
+                0% { background-position: 0 0; }
+                100% { background-position: 200% 0; }
+            }
         }
     </style>
 </head>
 <body class="font-inter bg-gray-50 text-gray-800 overflow-x-hidden">
-    <!-- 背景装饰元素 -->
-    <div class="fixed top-0 right-0 w-96 h-96 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-    <div class="fixed bottom-0 left-0 w-96 h-96 bg-secondary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+    <!-- 悬浮Logo+项目名及小组件区（已删除） -->
 
-    <!-- 导航栏 -->
-    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center">
-                    <i class="fa fa-graduation-cap text-xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-primary">QuesBank</h1>
-            </a>
-            
-            <!-- 桌面导航 -->
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors">首页</a>
-                <a href="#features" class="font-medium text-gray-700 hover:text-primary transition-colors">功能介绍</a>
-                <a href="#usage" class="font-medium text-gray-700 hover:text-primary transition-colors">使用说明</a>
-                <a href="#updates" class="font-medium text-gray-700 hover:text-primary transition-colors">更新日志</a>
-                <a href="#contact" class="font-medium text-gray-700 hover:text-primary transition-colors">联系我们</a>
-                <div class="flex items-center space-x-4">
-                    <span id="userStatus" class="text-sm text-gray-600"></span>
-                    <a href="admin.html" id="adminLink" class="font-medium text-gray-700 hover:text-primary transition-colors hidden">
-                        <i class="fa fa-users mr-1"></i>用户管理
+    <!-- 优化后的导航栏 -->
+    <header class="fixed w-full top-0 z-50" id="navbar">
+        <div class="navbar-container">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo区域 -->
+                <a href="index.html" class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fa fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">QuesBank</h1>
+                        <p class="logo-subtitle">智能题库系统</p>
+                    </div>
+                </a>
+                
+                <!-- 桌面导航 -->
+                        <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+                <!-- 桌面导航 -->
+        <nav class="hidden lg:flex items-center space-x-1 desktop-nav">
+          <a href="index.html" class="nav-link active">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="practice.html" class="nav-link">
+            <i class="fa fa-list-alt mr-2"></i>刷题模式
+          </a>
+          <a href="test.html" class="nav-link">
+            <i class="fa fa-flask mr-2"></i>功能测试
+          </a>
+          <a href="exam.html" class="nav-link">
+            <i class="fa fa-pencil mr-2"></i>考试模式
+          </a>
+          <a href="bank.html" class="nav-link">
+            <i class="fa fa-book mr-2"></i>题库
+          </a>
+          <a href="help.html" class="nav-link">
+            <i class="fa fa-question-circle mr-2"></i>帮助
+          </a>
+          <a href="readme.html" class="nav-link">
+            <i class="fa fa-file-text mr-2"></i>官方文档
+          </a>
+          <a href="api.html" class="nav-link">
+            <i class="fa fa-code mr-2"></i>API文档
+          </a>
+        </nav>
+                
+                <!-- 用户操作区域 -->
+                <div class="hidden lg:flex items-center space-x-3 user-actions">
+                    <span id="userStatus" class="user-status"></span>
+                    <a href="admin.html" id="adminLink" class="nav-link hidden">
+                        <i class="fa fa-cog mr-1"></i>管理
                     </a>
-                    <a href="#" id="logoutBtn" class="font-medium text-gray-700 hover:text-primary transition-colors hidden">
+                    <a href="#" id="logoutBtn" class="nav-link logout-link hidden">
                         <i class="fa fa-sign-out mr-1"></i>退出
                     </a>
-                    <a href="login.html" id="loginBtn" class="font-medium text-gray-700 hover:text-primary transition-colors">
+                    <a href="login.html" id="loginBtn" class="nav-link">
                         <i class="fa fa-sign-in mr-1"></i>登录
                     </a>
-                    <a href="practice.html" class="ml-4 bg-primary hover:bg-primary/90 text-white py-2 px-6 rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/20">
-                        立即体验
+                    <a href="practice.html" class="cta-button">
+                        <i class="fa fa-rocket"></i>
+                        <span>体验</span>
                     </a>
                 </div>
-            </nav>
+                
+                <!-- 移动端菜单按钮 -->
+                <button class="menu-toggle" id="menuBtn">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
             
-            <!-- 移动端菜单按钮 -->
-            <button class="md:hidden text-gray-700 focus:outline-none" id="menuBtn">
-                <i class="fa fa-bars text-2xl"></i>
-            </button>
-        </div>
-        
-        <!-- 移动端导航菜单 -->
-        <div class="md:hidden bg-white shadow-lg rounded-b-xl mx-4 mt-2 overflow-hidden transform -translate-y-full transition-transform duration-300 absolute w-[calc(100%-2rem)]" id="mobileMenu">
-            <div class="flex flex-col space-y-4 p-6">
-                <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors py-2">首页</a>
-                <a href="#features" class="font-medium text-gray-700 hover:text-primary transition-colors py-2">功能介绍</a>
-                <a href="#usage" class="font-medium text-gray-700 hover:text-primary transition-colors py-2">使用说明</a>
-                <a href="#updates" class="font-medium text-gray-700 hover:text-primary transition-colors py-2">更新日志</a>
-                <a href="#contact" class="font-medium text-gray-700 hover:text-primary transition-colors py-2">联系我们</a>
-                <a href="practice.html" class="bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-full font-medium text-center transition-all">
-                    立即体验
-                </a>
+            <!-- 移动端导航菜单 -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="px-4 py-6 space-y-4">
+                                                  <div class="mobile-nav-grid">
+            <a href="index.html" class="mobile-nav-item active">
+              <i class="fa fa-home mr-3"></i>首页
+            </a>
+            <a href="practice.html" class="mobile-nav-item">
+              <i class="fa fa-list-alt mr-3"></i>刷题模式
+            </a>
+            <a href="test.html" class="mobile-nav-item">
+              <i class="fa fa-flask mr-3"></i>功能测试
+            </a>
+            <a href="exam.html" class="mobile-nav-item">
+              <i class="fa fa-pencil mr-3"></i>考试模式
+            </a>
+            <a href="bank.html" class="mobile-nav-item">
+              <i class="fa fa-book mr-3"></i>题库
+            </a>
+            <a href="help.html" class="mobile-nav-item">
+              <i class="fa fa-question-circle mr-3"></i>帮助
+            </a>
+            <a href="readme.html" class="mobile-nav-item">
+              <i class="fa fa-file-text mr-3"></i>官方文档
+            </a>
+            <a href="api.html" class="mobile-nav-item">
+              <i class="fa fa-code mr-3"></i>API文档
+            </a>
+          </div>
+                    
+                    <div class="space-y-3">
+                        <div class="text-center">
+                            <span id="mobileUserStatusText" class="user-status"></span>
+                        </div>
+                        <a href="admin.html" id="mobileAdminLink" class="mobile-nav-item hidden">
+                            <i class="fa fa-cog mr-2"></i>管理
+                        </a>
+                        <a href="#" id="mobileLogoutBtn" class="mobile-nav-item logout-link hidden">
+                            <i class="fa fa-sign-out mr-2"></i>退出登录
+                        </a>
+                        <a href="login.html" id="mobileLoginBtn" class="mobile-nav-item">
+                            <i class="fa fa-sign-in mr-2"></i>登录系统
+                        </a>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-100">
+                        <a href="practice.html" class="cta-button w-full justify-center">
+                            <i class="fa fa-rocket"></i>
+                            <span>立即体验</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- 英雄区域 -->
-    <section class="pt-40 pb-24 px-4">
+    <section class="pt-28 pb-24 px-4">
         <div class="container mx-auto max-w-7xl">
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
+                <div class="space-y-8 md:col-span-1 flex flex-col items-center md:items-start">
                     <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight">
-                        <span class="bg-gradient-to-r from-primary to-secondary text-gradient">智能题库</span>
+                        <span class="hero-hero">智能题库</span>
                         <br>学习新方式
                     </h1>
                     <p class="text-xl text-gray-600 max-w-xl">
@@ -158,32 +301,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative">
+                <div class="relative md:col-span-1 flex flex-col items-center justify-center">
                     <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl animate-float">
-                        <img src="https://picsum.photos/id/20/800/600" alt="QuesBank 界面预览" class="w-full h-auto">
+                        <img src="image/index.png" alt="QuesBank 界面预览" class="w-full max-w-[480px] h-auto">
                         <div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
                     </div>
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/10 rounded-full blur-3xl -z-10"></div>
-                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg animate-float-delay-1">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                                <i class="fa fa-check"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">AI题目生成</h4>
-                                <p class="text-sm text-gray-500">准确率提升 92%</p>
-                            </div>
+                    <!-- LOGO组件 -->
+                    <div class="mt-20 flex items-center gap-6" style="justify-content:center;">
+                        <div class="logo-icon hero-logo" style="width:6rem;height:6rem;font-size:3.5rem;border-radius:2rem;">
+                            <i class="fa fa-graduation-cap" style="font-size:3.5rem;"></i>
                         </div>
-                    </div>
-                    <div class="absolute -top-6 -left-6 bg-white p-4 rounded-xl shadow-lg animate-float-delay-2">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                                <i class="fa fa-users"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">10K+ 用户</h4>
-                                <p class="text-sm text-gray-500">每日使用</p>
-                            </div>
+                        <div class="logo-text">
+                            <h1 class="logo-title hero-hero" style="font-size:2.5rem;">QuesBank</h1>
+                            <p class="logo-subtitle" style="font-size:1.25rem;">智能题库系统</p>
                         </div>
                     </div>
                 </div>
@@ -191,17 +322,50 @@
         </div>
     </section>
 
-    <!-- 信任标识 -->
-    <section class="py-12 bg-gray-100">
+    <!-- 功能特色展示 -->
+    <section class="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
         <div class="container mx-auto px-4">
-            <p class="text-center text-gray-500 mb-8">受到教育机构的信任</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
-                <img src="https://picsum.photos/id/30/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
-                <img src="https://picsum.photos/id/31/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
-                <img src="https://picsum.photos/id/32/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
-                <img src="https://picsum.photos/id/33/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
-                <img src="https://picsum.photos/id/34/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
-                <img src="https://picsum.photos/id/35/120/60" alt="合作伙伴Logo" class="h-8 opacity-60 hover:opacity-100 transition-opacity">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">系统功能特色</h2>
+                <p class="text-lg text-gray-600">直观展示QuesBank的核心功能和界面特色</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                <!-- 首页展示 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group">
+                    <div class="relative overflow-hidden">
+                        <img src="image/index.png" alt="QuesBank 首页界面" class="w-full h-auto group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">现代化首页</h3>
+                        <p class="text-gray-600">采用现代化设计风格，提供清晰的功能导航和用户引导</p>
+                    </div>
+                </div>
+                
+                <!-- 题库管理展示 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group">
+                    <div class="relative overflow-hidden">
+                        <img src="image/bank.png" alt="QuesBank 题库管理界面" class="w-full h-auto group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">题库管理</h3>
+                        <p class="text-gray-600">强大的题库管理功能，支持创建、编辑、导入导出等操作</p>
+                    </div>
+                </div>
+                
+                <!-- 考试模式展示 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group">
+                    <div class="relative overflow-hidden">
+                        <img src="image/exam.png" alt="QuesBank 考试模式界面" class="w-full h-auto group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">考试模式</h3>
+                        <p class="text-gray-600">专业的考试环境，支持多种题型和智能评分系统</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -218,7 +382,7 @@
                 <!-- 功能卡片 1 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-all">
-                        <i class="fa fa-file-import text-2xl"></i>
+                        <i class="fa fa-upload text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">题库导入导出</h3>
                     <p class="text-gray-600 mb-6">支持手动输入、AI生成、导入导出题库，兼容多种格式，方便快捷。</p>
@@ -231,7 +395,7 @@
                 <!-- 功能卡片 2 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                        <i class="fa fa-book-open text-2xl"></i>
+                        <i class="fa fa-list-alt text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">刷题模式</h3>
                     <p class="text-gray-600 mb-6">自由刷题、查看解析、保存到题库，智能记录学习进度，帮助您更好地学习。</p>
@@ -244,7 +408,7 @@
                 <!-- 功能卡片 3 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 mb-6 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                        <i class="fa fa-pencil-alt text-2xl"></i>
+                        <i class="fa fa-pencil text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">考试模式</h3>
                     <p class="text-gray-600 mb-6">多题库随机抽题、倒计时、自动评分、错题解析，模拟真实考试环境。</p>
@@ -257,7 +421,7 @@
                 <!-- 功能卡片 4 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-green-100 flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-all">
-                        <i class="fa fa-database text-2xl"></i>
+                        <i class="fa fa-book text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">题库管理</h3>
                     <p class="text-gray-600 mb-6">题库本地管理（重命名、删除、导出、导入、新建），轻松掌控您的题库。</p>
@@ -270,7 +434,7 @@
                 <!-- 功能卡片 5 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-red-100 flex items-center justify-center text-red-600 mb-6 group-hover:bg-red-600 group-hover:text-white transition-all">
-                        <i class="fa fa-plus text-2xl"></i>
+                        <i class="fa fa-edit text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">题目增删改查</h3>
                     <p class="text-gray-600 mb-6">支持多题型的题目增删改查，满足您的多样化需求。</p>
@@ -283,7 +447,7 @@
                 <!-- 功能卡片 6 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow group">
                     <div class="w-16 h-16 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-600 mb-6 group-hover:bg-yellow-600 group-hover:text-white transition-all">
-                        <i class="fa fa-mobile-alt text-2xl"></i>
+                        <i class="fa fa-mobile text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">响应式设计</h3>
                     <p class="text-gray-600 mb-6">适配PC和移动端，随时随地都能使用，提供一致的优质体验。</p>
@@ -358,7 +522,41 @@
             </div>
             
             <div class="space-y-8">
-                <!-- 更新项 1 -->
+                <!-- 更新项 1 - 最新 -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border-l-4 border-primary">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">v1.3.0 导航栏优化更新</h3>
+                        <span class="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">2025-06-30</span>
+                    </div>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>全面优化导航栏系统，实现统一、现代化、响应式设计</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>新增毛玻璃效果、渐变色彩、圆角设计，提升视觉体验</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>完善移动端适配，支持触摸友好的汉堡菜单</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>为所有页面（9个页面）添加统一导航栏，修复遮挡问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>优化用户状态管理和权限控制，提升交互体验</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            <span>重构test.html页面，采用现代化设计风格</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 更新项 2 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold">v1.2.0 版本更新</h3>
@@ -384,7 +582,7 @@
                     </ul>
                 </div>
                 
-                <!-- 更新项 2 -->
+                <!-- 更新项 3 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold">v1.1.0 版本更新</h3>
@@ -406,7 +604,7 @@
                     </ul>
                 </div>
                 
-                <!-- 更新项 3 -->
+                <!-- 更新项 4 -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold">v1.0.0 版本发布</h3>
@@ -548,7 +746,7 @@
                     <ul class="space-y-3">
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">API文档</a></li>
+                        <li><a href="api.html" class="text-gray-400 hover:text-white transition-colors">API文档</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-white transition-colors">社区论坛</a></li>
                     </ul>
                 </div>
@@ -584,14 +782,14 @@
         // 导航栏滚动效果
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
+            const nav95 = navbar.querySelector('.bg-white\\/95');
+            const nav98 = navbar.querySelector('.bg-white\\/98');
             if (window.scrollY > 50) {
-                navbar.classList.add('bg-white', 'shadow-md');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-2');
+                if (nav95) nav95.classList.add('bg-white/98', 'shadow-xl');
+                if (nav95) nav95.classList.remove('bg-white/95');
             } else {
-                navbar.classList.remove('bg-white', 'shadow-md');
-                navbar.classList.add('py-4');
-                navbar.classList.remove('py-2');
+                if (nav98) nav98.classList.add('bg-white/95');
+                if (nav98) nav98.classList.remove('bg-white/98', 'shadow-xl');
             }
         });
         
@@ -599,14 +797,22 @@
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         menuBtn.addEventListener('click', () => {
-            if (mobileMenu.classList.contains('-translate-y-full')) {
-                mobileMenu.classList.remove('-translate-y-full');
-                mobileMenu.classList.add('translate-y-0');
-                menuBtn.innerHTML = '<i class="fa fa-times text-2xl"></i>';
+            mobileMenu.classList.toggle('open');
+            menuBtn.classList.toggle('active');
+            
+            if (mobileMenu.classList.contains('open')) {
+                menuBtn.innerHTML = '<i class="fa fa-times text-xl"></i>';
             } else {
-                mobileMenu.classList.add('-translate-y-full');
-                mobileMenu.classList.remove('translate-y-0');
-                menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+                menuBtn.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+            }
+        });
+        
+        // 点击外部关闭移动菜单
+        document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+                menuBtn.classList.remove('active');
+                menuBtn.innerHTML = '<i class="fa fa-bars text-xl"></i>';
             }
         });
         
@@ -621,41 +827,83 @@
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     // 关闭移动菜单（如果打开）
-                    if (!mobileMenu.classList.contains('-translate-y-full')) {
-                        mobileMenu.classList.add('-translate-y-full');
-                        mobileMenu.classList.remove('translate-y-0');
-                        menuBtn.innerHTML = '<i class="fa fa-bars text-2xl"></i>';
+                    if (mobileMenu.classList.contains('open')) {
+                        mobileMenu.classList.remove('open');
+                        menuBtn.classList.remove('active');
+                        menuBtn.innerHTML = '<i class="fa fa-bars text-xl"></i>';
                     }
                     
                     window.scrollTo({
-                        top: targetElement.offsetTop - 80,
+                        top: targetElement.offsetTop - 100,
                         behavior: 'smooth'
                     });
                 }
             });
         });
         
+        // 导航链接激活状态
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // 滚动时更新导航链接状态
+        window.addEventListener('scroll', updateActiveNavLink);
+        
         // 用户状态和权限管理
         function checkUserStatus() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
             const userStatus = document.getElementById('userStatus');
+            const mobileUserStatusText = document.getElementById('mobileUserStatusText');
             const adminLink = document.getElementById('adminLink');
+            const mobileAdminLink = document.getElementById('mobileAdminLink');
             const logoutBtn = document.getElementById('logoutBtn');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
             const loginBtn = document.getElementById('loginBtn');
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
             
             if (currentUser) {
-                userStatus.textContent = `欢迎，${currentUser.username}`;
+                const statusText = `欢迎，${currentUser.username}`;
+                userStatus.textContent = statusText;
+                mobileUserStatusText.textContent = statusText;
                 logoutBtn.classList.remove('hidden');
+                mobileLogoutBtn.classList.remove('hidden');
                 loginBtn.classList.add('hidden');
+                mobileLoginBtn.classList.add('hidden');
                 
                 if (currentUser.role === 'admin') {
                     adminLink.classList.remove('hidden');
+                    mobileAdminLink.classList.remove('hidden');
+                } else {
+                    adminLink.classList.add('hidden');
+                    mobileAdminLink.classList.add('hidden');
                 }
             } else {
-                userStatus.textContent = '游客模式';
+                const statusText = '游客模式';
+                userStatus.textContent = statusText;
+                mobileUserStatusText.textContent = statusText;
                 logoutBtn.classList.add('hidden');
+                mobileLogoutBtn.classList.add('hidden');
                 loginBtn.classList.remove('hidden');
+                mobileLoginBtn.classList.remove('hidden');
                 adminLink.classList.add('hidden');
+                mobileAdminLink.classList.add('hidden');
             }
         }
         
@@ -672,7 +920,11 @@
         function showNotification(title, message, type = 'info') {
             // 创建通知元素
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 max-w-sm z-50`;
+            notification.className = `fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 max-w-sm z-50 border-l-4 ${
+                type === 'success' ? 'border-green-500' : 
+                type === 'error' ? 'border-red-500' : 
+                'border-blue-500'
+            }`;
             notification.innerHTML = `
                 <div class="flex items-center">
                     <i class="mr-3 text-lg ${type === 'success' ? 'text-green-500 fa fa-check-circle' : 
@@ -682,6 +934,9 @@
                         <h4 class="font-medium">${title}</h4>
                         <p class="text-sm text-gray-600">${message}</p>
                     </div>
+                    <button class="ml-4 text-gray-400 hover:text-gray-600" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fa fa-times"></i>
+                    </button>
                 </div>
             `;
             
@@ -693,14 +948,16 @@
                 notification.classList.add('translate-x-0');
             }, 100);
             
-            // 3秒后自动隐藏
+            // 5秒后自动隐藏
             setTimeout(() => {
                 notification.classList.remove('translate-x-0');
                 notification.classList.add('translate-x-full');
                 setTimeout(() => {
-                    document.body.removeChild(notification);
+                    if (notification.parentElement) {
+                        document.body.removeChild(notification);
+                    }
                 }, 300);
-            }, 3000);
+            }, 5000);
         }
         
         // 页面加载时检查用户状态
@@ -712,6 +969,14 @@
                 e.preventDefault();
                 logout();
             });
+            
+            document.getElementById('mobileLogoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // 初始化导航链接状态
+            updateActiveNavLink();
         });
     </script>
 </body>

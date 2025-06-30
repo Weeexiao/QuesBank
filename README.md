@@ -1,7 +1,23 @@
+<!-- 项目LOGO -->
+<p align="left">
+  <img src="image/bank.png" alt="QuesBank Logo" width="60" style="vertical-align:middle; margin-right:8px; border-radius:16px; box-shadow:0 2px 8px #0001;"/>
+  <span style="font-size:2rem; font-weight:bold; color:#2196f3; vertical-align:middle;">QuesBank</span>
+  <span style="font-size:1rem; color:#888; vertical-align:middle; margin-left:8px;">智能题库系统</span>
+</p>
+
+<!-- 项目徽章 -->
+<p align="left">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square"/>
+  <img src="https://img.shields.io/badge/first--timers--only-friendly-blue?style=flat-square"/>
+  <img src="https://img.shields.io/badge/code%20helpers-704-blueviolet?style=flat-square"/>
+  <img src="https://img.shields.io/badge/setup-automated-orange?style=flat-square"/>
+  <img src="https://img.shields.io/badge/Discord-2.8k%20online-5865F2?logo=discord&logoColor=white&style=flat-square"/>
+</p>
+
 # QuesBank 智能题库网页版
 
-**版本号：1.2**  
-**更新日期：2025年6月28日**  
+**版本号：1.3.0**  
+**更新日期：2025年6月30日**  
 开发者：史智阳  
 邮箱：562052228@qq.com
 
@@ -251,6 +267,18 @@ QuesBank 智能题库网页版是一个面向教师和学生的本地化题库�
 5. 本地测试需要MySQL数据库支持
 
 ## 更新日志
+
+### v1.3.0 (2025-06-30) - 导航栏优化更新
+- 🎨 **全面优化导航栏系统**：实现统一、现代化、响应式设计
+- ✨ **新增毛玻璃效果**：使用backdrop-filter实现现代感视觉效果
+- 🌈 **渐变色彩设计**：采用蓝色渐变主题，符合教育类应用风格
+- 📱 **完善移动端适配**：支持触摸友好的汉堡菜单和网格布局
+- 🔧 **统一页面导航**：为所有9个页面添加统一导航栏
+- 🛠️ **修复遮挡问题**：为所有页面主内容区域添加顶部边距
+- 🎯 **优化用户体验**：改进用户状态管理和权限控制
+- 🎨 **重构测试页面**：test.html采用现代化设计风格
+- 📦 **组件化架构**：创建可复用的导航栏组件
+- ⚡ **性能优化**：高效的CSS和JavaScript实现
 
 ### v1.2.1 (2025-06-28)
 - 新增宝塔面板快速部署脚本
