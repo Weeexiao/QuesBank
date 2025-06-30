@@ -130,23 +130,31 @@
 
   <!-- 主内容区 -->
   <main class="flex-grow container mx-auto px-4 py-8 mt-20">
-    <div class="bg-white rounded-xl shadow-card p-6 mb-6">
-      <h2 class="text-xl font-bold mb-4 flex items-center">
-        <i class="fa fa-pencil text-primary mr-2"></i>
-        考试模式
-      </h2>
+    <div class="bg-gradient-to-br from-blue-100/80 to-indigo-100/80 rounded-3xl shadow-2xl p-10 mb-10 border border-blue-100 relative overflow-hidden">
+      <div class="absolute -top-8 -left-8 opacity-10 pointer-events-none select-none">
+        <i class="fa fa-pencil text-[8rem] text-indigo-600"></i>
+      </div>
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #2387fa 0%, #3ed6cb 100%);">
+          <i class="fa fa-pencil text-3xl text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-3xl font-extrabold text-gray-800 mb-1 tracking-wide">考试模式</h2>
+          <p class="text-gray-500 text-base">支持多题库随机抽题、倒计时、自动评分、错题解析</p>
+        </div>
+      </div>
       <!-- 题库选择区 -->
-      <div class="mb-6">
+      <div class="mb-8 bg-white/80 rounded-xl shadow p-6 border border-gray-100">
         <label class="block text-sm font-medium text-gray-700 mb-2">选择题库（可多选）</label>
         <div id="bankList" class="flex flex-wrap gap-3"></div>
       </div>
       <!-- 考试参数设置区 -->
-      <div class="flex flex-col sm:flex-row gap-4 mb-6">
-        <div class="flex items-center gap-2">
+      <div class="flex flex-col sm:flex-row gap-6 mb-8">
+        <div class="flex items-center gap-2 bg-white/80 rounded-lg px-4 py-3 border border-gray-100 shadow-sm">
           <label class="block text-sm font-medium text-gray-700">题数</label>
           <input id="examCount" type="number" min="1" value="10" class="w-20 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 bg-white/80 rounded-lg px-4 py-3 border border-gray-100 shadow-sm">
           <label class="block text-sm font-medium text-gray-700">考试时间(分钟)</label>
           <input id="examTime" type="number" min="1" value="30" class="w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
         </div>
@@ -158,9 +166,9 @@
         </div>
       </div>
       <!-- 考试卡片区 -->
-      <div id="examArea" class="space-y-6"></div>
+      <div id="examArea" class="space-y-8"></div>
       <!-- 提交与评分区 -->
-      <div id="examResult" class="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-lg hidden"></div>
+      <div id="examResult" class="mt-12 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-xl hidden"></div>
     </div>
   </main>
   

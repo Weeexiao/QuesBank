@@ -217,28 +217,28 @@
     function loadTestExample() {
       const testJson = document.getElementById('testJson');
       const exampleData = {
-        "选择题": [
-          {
-            "question": "测试选择题",
-            "options": ["A", "B", "C", "D"],
-            "answer": "A",
-            "explanation": "这是测试解析"
-          }
-        ],
-        "填空题": [
-          {
-            "question": "测试填空题，答案是(  )",
-            "answer": "测试",
-            "explanation": "这是测试解析"
-          }
-        ],
-        "判断题": [
-          {
-            "question": "测试判断题",
-            "answer": "正确",
-            "explanation": "这是测试解析"
-          }
-        ]
+  "选择题": [
+    {
+      "question": "测试选择题",
+      "options": ["A", "B", "C", "D"],
+      "answer": "A",
+      "explanation": "这是测试解析"
+    }
+  ],
+  "填空题": [
+    {
+      "question": "测试填空题，答案是(  )",
+      "answer": "测试",
+      "explanation": "这是测试解析"
+    }
+  ],
+  "判断题": [
+    {
+      "question": "测试判断题",
+      "answer": "正确",
+      "explanation": "这是测试解析"
+    }
+  ]
       };
       testJson.value = JSON.stringify(exampleData, null, 2);
     }

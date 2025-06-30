@@ -151,11 +151,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (examQuestions.length === 0) return;
     examQuestions.forEach((q, idx) => {
       const card = document.createElement('div');
-      card.className = 'bg-white rounded-xl shadow-card card-transition card-hover p-6 relative overflow-hidden';
+      card.className = 'bg-white rounded-xl shadow-card card-transition card-hover shadow-card-hover p-6 relative overflow-visible';
+      // 题型徽章
+      const typeBadge = document.createElement('div');
+      typeBadge.className = 'exam-type-badge';
+      typeBadge.setAttribute('data-type', q.type);
+      typeBadge.textContent = q.type;
+      card.appendChild(typeBadge);
       // 题号
       const header = document.createElement('div');
       header.className = 'mb-2 text-lg font-bold text-primary';
-      header.textContent = `第${idx + 1}题（${q.type}）`;
+      header.textContent = `第${idx + 1}题`;
       card.appendChild(header);
       // 题干
       const qText = document.createElement('div');
@@ -289,24 +295,57 @@ document.addEventListener('DOMContentLoaded', () => {
       <p class="text-gray-600">正确率：${correct} / ${total}</p>
     </div>`;
     if (wrongList.length > 0) {
-      html += `<div class="mt-6 text-left">
-        <h4 class="text-lg font-bold text-danger mb-2">错题解析</h4>`;
+      html += `<div class="mt-6 grid gap-6 md:grid-cols-2">
+        <h4 class="text-lg font-bold text-danger mb-2 md:col-span-2 flex items-center"><i class="fa fa-exclamation-circle mr-2"></i>错题解析</h4>`;
       wrongList.forEach(w => {
-        html += `<div class="mb-4 p-4 bg-red-50 rounded">
-          <div class="font-bold text-danger mb-1">第${w.idx}题</div>
-          <div class="mb-1 text-gray-800">${w.question}</div>
-          <div class="mb-1 text-gray-700">你的答案：<span class="text-danger">${w.userAns}</span></div>
-          <div class="mb-1 text-green-700">正确答案：${w.rightAns}</div>
-          <div class="text-gray-600 text-sm">解析：${w.explanation}</div>
+        html += `<div class="transition-transform duration-300 hover:scale-[1.025] hover:shadow-2xl bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-lg p-6 group relative overflow-hidden">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-400 to-pink-400 text-white shadow">第${w.idx}题</span>
+            <span class="text-sm text-gray-500">你的答案：</span>
+            <span class="font-bold text-danger">${w.userAns}</span>
+          </div>
+          <div class="mb-2 text-base font-semibold text-gray-800">${w.question}</div>
+          <div class="flex items-center gap-2 mb-1">
+            <i class="fa fa-check-circle text-green-500"></i>
+            <span class="text-green-700 font-bold">正确答案：</span>
+            <span class="text-green-700">${w.rightAns}</span>
+          </div>
+          <button class="mt-2 px-3 py-1 bg-gray-100 hover:bg-primary/10 text-primary rounded-lg text-sm transition-colors duration-200 flex items-center explanation-toggle">
+            <i class="fa fa-lightbulb-o mr-1"></i> 查看解析
+          </button>
+          <div class="explanation-content mt-3 p-3 bg-gray-50 rounded-lg text-gray-600 text-sm hidden">
+            <i class="fa fa-info-circle text-primary mr-1"></i> ${w.explanation}
+          </div>
         </div>`;
       });
       html += `</div>`;
     } else {
-      html += `<div class="mt-6 text-success text-center font-bold">全部答对，太棒了！</div>`;
+      html += `<div class="mt-6 text-success text-center font-bold text-xl flex flex-col items-center gap-2">
+        <i class="fa fa-trophy text-4xl text-yellow-400 animate-bounce"></i>
+        全部答对，太棒了！
+      </div>`;
     }
     examResult.innerHTML = html;
     examResult.classList.remove('hidden');
     examArea.innerHTML = '';
+    // 解析折叠动画
+    examResult.querySelectorAll('.explanation-toggle').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const content = this.parentElement.querySelector('.explanation-content');
+        if (content) {
+          content.classList.toggle('hidden');
+          if (!content.classList.contains('hidden')) {
+            content.style.maxHeight = content.scrollHeight + 'px';
+            content.style.transition = 'max-height 0.3s cubic-bezier(0.4,0,0.2,1)';
+          } else {
+            content.style.maxHeight = '0';
+          }
+        }
+        this.innerHTML = content.classList.contains('hidden')
+          ? '<i class="fa fa-lightbulb-o mr-1"></i> 查看解析'
+          : '<i class="fa fa-eye-slash mr-1"></i> 隐藏解析';
+      });
+    });
   }
 
   // 初始化

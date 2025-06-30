@@ -36,7 +36,7 @@
                     <div class="logo-text">
                         <h1 class="logo-title">QuesBank</h1>
                         <p class="logo-subtitle">智能题库系统</p>
-                    </div>
+            </div>
                 </a>
                 
                 <!-- 桌面导航 -->
@@ -64,8 +64,8 @@
                     </a>
                     <a href="help.html" class="nav-link">
                         <i class="fa fa-question-circle"></i>帮助
-                    </a>
-                </nav>
+                </a>
+            </nav>
                 
                 <!-- 用户操作区域 -->
                 <div class="hidden lg:flex items-center space-x-4">
@@ -83,7 +83,7 @@
                 <!-- 移动端菜单按钮 -->
                 <button class="menu-toggle" id="menuBtn">
                     <i class="fa fa-bars text-xl"></i>
-                </button>
+            </button>
             </div>
             
             <!-- 移动端导航菜单 -->
@@ -281,7 +281,7 @@
 
     <!-- 导航栏脚本 -->
     <script src="js/navbar.js"></script>
-    
+
     <script>
         // 检查管理员权限
         function checkAdminPermission() {
@@ -352,11 +352,11 @@
             // 绑定移动端退出按钮事件
             document.getElementById('mobileLogoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUser');
                 showNotification('已退出', '您已安全退出系统', 'success');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1000);
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
             });
         });
     </script>
