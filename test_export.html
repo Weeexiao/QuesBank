@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>试卷导出测试</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .exam-preview {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px 0;
+      background: white;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="test-container">
+    <h1 class="text-2xl font-bold mb-4">试卷导出功能测试</h1>
+    
+    <div class="bg-white p-4 rounded-lg shadow mb-4">
+      <h2 class="text-lg font-semibold mb-2">测试数据</h2>
+      <button onclick="createTestData()" class="bg-blue-500 text-white px-4 py-2 rounded">创建测试题库</button>
+      <button onclick="testExport()" class="bg-green-500 text-white px-4 py-2 rounded ml-2">测试导出</button>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h2 class="text-lg font-semibold mb-2">试卷预览</h2>
+      <div id="examPreview" class="exam-preview"></div>
+    </div>
+  </div>
+
+  <script>
+    // 创建测试题库数据
+    function createTestData() {
+      const testBank = {
+        id: 'test-bank-' + Date.now(),
+        name: '测试题库',
+        timestamp: new Date().toISOString(),
+        questions: [
+          {
+            type: '选择题',
+            questions: [
+              {
+                question: '下列哪个是JavaScript的基本数据类型？',
+                options: ['Object', 'Array', 'String', 'Function'],
+                answer: 'C',
+                explanation: 'JavaScript的基本数据类型包括：String、Number、Boolean、Undefined、Null、Symbol、BigInt'
+              },
+              {
+                question: 'HTML5中新增的语义化标签不包括：',
+                options: ['<header>', '<nav>', '<div>', '<footer>'],
+                answer: 'C',
+                explanation: '<div>是HTML4就有的标签，不是HTML5新增的语义化标签'
+              }
+            ]
+          },
+          {
+            type: '填空题',
+            questions: [
+              {
+                question: 'CSS中，用于设置元素背景颜色的属性是_______。',
+                answer: 'background-color',
+                explanation: 'background-color属性用于设置元素的背景颜色'
+              }
+            ]
+          },
+          {
+            type: '判断题',
+            questions: [
+              {
+                question: 'JavaScript是一种强类型语言。',
+                answer: '错误',
+                explanation: 'JavaScript是弱类型语言，变量类型可以动态改变'
+              }
+            ]
+          }
+        ]
+      };
+      
+      // 保存到localStorage
+      const banks = JSON.parse(localStorage.getItem('questionBank') || '[]');
+      banks.push(testBank);
+      localStorage.setItem('questionBank', JSON.stringify(banks));
+      
+      alert('测试题库已创建！');
+      previewExam(testBank);
+    }
+    
+    // 预览试卷
+    function previewExam(bank) {
+      const examHTML = generateExamHTML(bank, '测试试卷', true, true);
+      document.getElementById('examPreview').innerHTML = examHTML;
+    }
+    
+    // 测试导出
+    function testExport() {
+      const banks = JSON.parse(localStorage.getItem('questionBank') || '[]');
+      if (banks.length === 0) {
+        alert('请先创建测试题库');
+        return;
+      }
+      
+      const bank = banks[banks.length - 1];
+      const examHTML = generateExamHTML(bank, '测试试卷', true, true);
+      
+      // 测试PDF导出
+      exportToPDF(examHTML, '测试试卷');
+    }
+    
+    // 生成试卷HTML（复制bank.js中的函数）
+    function generateExamHTML(bank, title, includeAnswer, includeExplanation) {
+      let questions = [];
+      if (bank.questions && bank.questions.length > 0) {
+        bank.questions.forEach(category => {
+          if (category.questions && category.questions.length > 0) {
+            questions = questions.concat(category.questions.map(q => ({
+              ...q,
+              type: category.type
+            })));
+          }
+        });
+      }
+      
+      if (questions.length === 0) {
+        return '<p>暂无题目</p>';
+      }
+      
+      let html = `
+        <div style="font-family: 'Microsoft YaHei', 'SimSun', serif; font-size: 14px; line-height: 1.6; color: #000;">
+          <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px;">
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">${title}</div>
+            <div style="font-size: 14px; margin-bottom: 5px;">考试时间：120分钟</div>
+            <div style="font-size: 14px; margin-bottom: 5px;">总分：${questions.length * 10}分</div>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; padding: 10px; border: 1px solid #000;">
+            <span>考生姓名：_________________</span>
+            <span>学号：_________________</span>
+            <span>成绩：_________________</span>
+          </div>
+          
+          <div>`;
+      
+      questions.forEach((question, index) => {
+        html += `
+          <div style="margin-bottom: 20px; border-left: 3px solid #007bff; padding-left: 15px;">
+            <div style="font-weight: bold; margin-bottom: 8px;">
+              ${index + 1}. [${question.type}] ${question.question}
+            </div>
+            <div style="margin-bottom: 8px;">`;
+        
+        if (question.type === '选择题' && question.options) {
+          html += '<div style="margin-left: 20px;">';
+          question.options.forEach((option, optIndex) => {
+            html += `<div style="margin-bottom: 5px;">${String.fromCharCode(65 + optIndex)}. ${option}</div>`;
+          });
+          html += '</div>';
+        } else if (question.type === '填空题') {
+          html += '<div style="margin-left: 20px;">答案：_________________</div>';
+        } else if (question.type === '判断题') {
+          html += '<div style="margin-left: 20px;">( ) 正确 ( ) 错误</div>';
+        }
+        
+        html += '</div>';
+        
+        if (includeAnswer) {
+          html += `<div style="color: #28a745; font-weight: bold; margin-top: 8px;">答案：${question.answer}</div>`;
+        }
+        
+        if (includeExplanation && question.explanation) {
+          html += `<div style="color: #6c757d; font-style: italic; margin-top: 5px;">解析：${question.explanation}</div>`;
+        }
+        
+        html += '</div>';
+      });
+      
+      html += `
+          </div>
+        </div>`;
+      
+      return html;
+    }
+    
+    // 导出为PDF
+    function exportToPDF(html, title) {
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = '210mm';
+      container.style.height = '297mm';
+      container.style.overflow = 'hidden';
+      document.body.appendChild(container);
+      
+      const element = container.firstElementChild;
+      
+      setTimeout(() => {
+        const opt = {
+          margin: [15, 15, 15, 15],
+          filename: `${title}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2, 
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            width: 794,
+            height: 1123
+          },
+          jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait',
+            compress: true
+          }
+        };
+        
+        html2pdf()
+          .set(opt)
+          .from(element)
+          .save()
+          .then(() => {
+            document.body.removeChild(container);
+            alert('PDF导出成功！');
+          })
+          .catch(err => {
+            console.error('PDF生成失败:', err);
+            alert('PDF生成失败，请重试');
+            document.body.removeChild(container);
+          });
+      }, 1000);
+    }
+  </script>
+</body>
+</html> 

@@ -132,6 +132,89 @@
     </style>
 </head>
 <body class="font-inter bg-gray-50 text-gray-800 overflow-x-hidden">
+    <!-- QuesBank SVG 动画浮层（主标题描边，副标题由远及近） -->
+    <div id="qsplash" style="position:fixed;z-index:99999;left:0;top:0;width:100vw;height:100vh;pointer-events:none;background:transparent;display:flex;align-items:center;justify-content:center;">
+      <svg viewBox="0 0 1320 420" style="width:80vw;max-width:900px;height:320px;">
+        <defs>
+          <!-- 渐变色 -->
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#36CFC9"/>
+            <stop offset="100%" stop-color="#165DFF"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FF7D00"/>
+            <stop offset="100%" stop-color="#36CFC9"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#165DFF"/>
+            <stop offset="100%" stop-color="#FF7D00"/>
+          </linearGradient>
+          <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <filter id="subglow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="10" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <symbol id="s-text">
+            <text text-anchor="middle" x="50%" y="38%" dy=".35em" font-family="Open Sans,Impact,sans-serif" font-size="160">QuesBank</text>
+          </symbol>
+        </defs>
+        <!-- 主标题三层渐变描边 -->
+        <use xlink:href="#s-text" class="text" stroke="url(#g1)" filter="url(#glow)"></use>
+        <use xlink:href="#s-text" class="text" stroke="url(#g2)" filter="url(#glow)"></use>
+        <use xlink:href="#s-text" class="text" stroke="url(#g3)" filter="url(#glow)"></use>
+        <!-- 副标题由远及近+静态描边 -->
+        <text id="subtext" x="50%" y="70%" text-anchor="middle" font-family="Open Sans,Impact,sans-serif" font-size="80" font-weight="bold" fill="#fff" stroke="#bbb" stroke-width="3" filter="url(#subglow)" style="opacity:0;transform:scale(0.7);">让学习更简单</text>
+      </svg>
+    </div>
+    <style>
+    @import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+    #qsplash .text {
+      fill: none;
+      stroke-width: 5;
+      stroke-dasharray: 0 300;
+      stroke-dashoffset: 0;
+    }
+    #qsplash .text:nth-child(2) { animation: stroke 5s ease-in-out forwards;}
+    #qsplash .text:nth-child(3) { animation: stroke1 5s ease-in-out forwards;}
+    #qsplash .text:nth-child(4) { animation: stroke2 5s ease-in-out forwards;}
+    @keyframes stroke { 100% { stroke-dashoffset: 1000; stroke-dasharray: 80 160; } }
+    @keyframes stroke1 { 100% { stroke-dashoffset: 1080; stroke-dasharray: 80 160; } }
+    @keyframes stroke2 { 100% { stroke-dashoffset: 1160; stroke-dasharray: 80 160; } }
+    #qsplash { transition: opacity 0.8s; }
+    #subtext {
+      opacity: 0;
+      transform: scale(0.7);
+      filter: drop-shadow(0 0 16px #fff);
+      transition: opacity 1.2s cubic-bezier(.4,2,.4,1), transform 1.2s cubic-bezier(.4,2,.4,1);
+      transition-delay: 0.8s;
+    }
+    #subtext.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    </style>
+    <script>
+    window.addEventListener('DOMContentLoaded',function(){
+      setTimeout(function(){
+        document.getElementById('subtext').classList.add('show');
+      }, 800);
+      setTimeout(function(){
+        const splash = document.getElementById('qsplash');
+        splash.style.opacity = 0;
+        setTimeout(()=>splash.remove(), 900);
+      }, 5500);
+    });
+    </script>
+
     <!-- 悬浮Logo+项目名及小组件区（已删除） -->
 
     <!-- 优化后的导航栏 -->
@@ -628,6 +711,106 @@
             </div>
         </div>
     </section>
+
+    <!-- 打赏按钮和弹窗（仿菜鸟教程风格，原生JS+本地图片） -->
+    <div class="flex justify-center my-10">
+      <a href="javascript:void(0)" id="dashang-btn" class="dashang block w-32 text-center py-2 px-4 bg-[#E74851] text-white rounded-xl font-bold text-lg hover:opacity-80 hover:py-4 hover:text-xl transition-all" title="打赏，支持一下">打赏</a>
+    </div>
+    <div id="hide_box" class="hide_box fixed inset-0 z-[9998] bg-black/60 hidden"></div>
+    <div id="shang_box" class="shang_box fixed z-[9999] left-1/2 top-1/2 bg-white rounded-xl border border-dotted border-gray-300 shadow-2xl p-4 w-[340px] max-w-[95vw] -translate-x-1/2 -translate-y-1/2 hidden transition-all duration-300">
+      <button id="shang_close" class="shang_close absolute right-4 top-4 text-gray-400 hover:text-gray-700 text-2xl font-bold">×</button>
+      <div class="shang_tit w-full h-16 flex items-center justify-center rounded-t-xl mb-2 bg-gradient-to-r from-orange-100 via-orange-200 to-orange-100 border-b border-orange-200">
+        <p class="text-gray-500 text-base">感谢您的支持，我会继续努力的！</p>
+      </div>
+      <div class="shang_payimg w-36 h-36 mx-auto my-2 border-4 border-orange-600 rounded-md flex items-center justify-center bg-white">
+        <img id="shang_qr_img" src="image/alipay_qr.png" alt="扫码支持" class="w-32 h-32 object-cover rounded transition-all duration-300" />
+      </div>
+      <div class="pay_explain text-center text-xs text-gray-600 my-2">扫码打赏，你说多少就多少</div>
+      <div class="shang_payselect flex justify-center items-center gap-6 my-4">
+        <div class="pay_item checked flex items-center cursor-pointer" data-id="alipay">
+          <span class="radiobox mr-2">
+            <!-- 选中状态：实心圆 -->
+            <svg class="radio-checked w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="currentColor"/><circle cx="10" cy="10" r="4" fill="#fff"/></svg>
+            <!-- 未选中状态：空心圆 -->
+            <svg class="radio-unchecked w-5 h-5 text-gray-400 hidden" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </span>
+          <span class="pay_logo"><img src="image/alipay_logo.jpg" alt="支付宝" class="w-8 h-8 rounded" /></span>
+        </div>
+        <div class="pay_item flex items-center cursor-pointer" data-id="wechat">
+          <span class="radiobox mr-2">
+            <svg class="radio-checked w-5 h-5 text-orange-500 hidden" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="currentColor"/><circle cx="10" cy="10" r="4" fill="#fff"/></svg>
+            <svg class="radio-unchecked w-5 h-5 text-gray-400" fill="none" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </span>
+          <span class="pay_logo"><img src="image/wechat_logo.jpg" alt="微信" class="w-8 h-8 rounded" /></span>
+        </div>
+      </div>
+      <div class="shang_info text-center text-xs text-gray-400 mt-2">
+        <p>打开<span id="shang_pay_txt" class="text-orange-600">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+        <p>Powered by QuesBank</p>
+      </div>
+    </div>
+
+    <style>
+    .dashang { transition: all 0.3s; }
+    .dashang:hover { opacity: 0.8; padding-top: 18px; padding-bottom: 18px; font-size: 20px; }
+    .hide_box { display: none; }
+    .shang_box { display: none; }
+    .shang_box.show, .hide_box.show { display: block !important; }
+    /* 移除radio图片相关CSS */
+    </style>
+
+    <script>
+    const dashangBtn = document.getElementById('dashang-btn');
+    const hideBox = document.getElementById('hide_box');
+    const shangBox = document.getElementById('shang_box');
+    const shangClose = document.getElementById('shang_close');
+    const payItems = document.querySelectorAll('.pay_item');
+    const shangQrImg = document.getElementById('shang_qr_img');
+    const shangPayTxt = document.getElementById('shang_pay_txt');
+
+    function dashangToggle() {
+      hideBox.classList.toggle('show');
+      shangBox.classList.toggle('show');
+      if (hideBox.classList.contains('show')) {
+        hideBox.style.display = 'block';
+        shangBox.style.display = 'block';
+        setTimeout(() => {
+          shangBox.style.transform = 'scale(1) translate(-50%, -50%)';
+          shangBox.style.opacity = '1';
+        }, 10);
+      } else {
+        shangBox.style.transform = 'scale(0.8) translate(-50%, -50%)';
+        shangBox.style.opacity = '0';
+        setTimeout(() => {
+          hideBox.style.display = 'none';
+          shangBox.style.display = 'none';
+        }, 250);
+      }
+    }
+
+    dashangBtn.onclick = dashangToggle;
+    shangClose.onclick = dashangToggle;
+    hideBox.onclick = dashangToggle;
+
+    payItems.forEach(item => {
+      item.onclick = function() {
+        payItems.forEach(i => {
+          i.classList.remove('checked');
+          i.querySelector('.radio-checked').classList.add('hidden');
+          i.querySelector('.radio-unchecked').classList.remove('hidden');
+        });
+        this.classList.add('checked');
+        this.querySelector('.radio-checked').classList.remove('hidden');
+        this.querySelector('.radio-unchecked').classList.add('hidden');
+        const id = this.getAttribute('data-id');
+        shangQrImg.src = id === 'alipay' ? 'image/alipay_qr.png' : 'image/wechat_qr.png';
+        shangPayTxt.textContent = id === 'alipay' ? '支付宝' : '微信';
+      }
+    });
+    // 初始动画样式
+    shangBox.style.transform = 'scale(0.8) translate(-50%, -50%)';
+    shangBox.style.opacity = '0';
+    </script>
 
     <!-- 反馈与支持 -->
     <section id="contact" class="py-24 px-4 bg-primary/5">

@@ -400,21 +400,62 @@ QuesBank 智能题库网页版是一个面向教师和学生的本地化题库�
 
 ### 项目结构
 ```
-QuesBank/
-├── server/                 # 后端服务
-│   ├── app.js             # 主应用文件
-│   ├── config/            # 配置文件
-│   ├── middleware/        # 中间件
-│   ├── routes/            # 路由文件
-│   └── package.json       # 依赖配置
-├── js/                    # 前端JavaScript
-│   └── api.js            # API服务类
-├── *.html                 # 前端页面
-├── database_schema.sql    # 数据库结构
-├── deploy.html           # 部署向导页面
-├── 宝塔快速部署.sh        # 宝塔快速部署脚本
-├── 宝塔一键部署.sh        # 宝塔部署脚本
-└── README.md             # 项目说明
+QuesBank-master/
+  ├── admin.html                # 管理后台页面
+  ├── api.html                  # API接口测试页面
+  ├── API接口文档.md            # API接口说明文档
+  ├── bank_detail.html          # 题库详情页面
+  ├── bank_detail.js            # 题库详情页面JS逻辑
+  ├── bank.html                 # 题库管理主页面
+  ├── bank.js                   # 题库管理页面JS逻辑
+  ├── database_schema.sql       # 数据库结构SQL
+  ├── demo.html                 # 功能演示页面
+  ├── deploy.html               # 部署向导页面
+  ├── exam.html                 # 考试模式页面
+  ├── exam.js                   # 考试模式页面JS逻辑
+  ├── fonts/                    # 字体文件目录
+  │   ├── README.md             # 字体说明
+  │   └── SimHei.ttf            # 黑体字体文件
+  ├── help.html                 # 帮助页面
+  ├── image/                    # 图片资源目录
+  │   ├── bank.png              # 题库页面示意图
+  │   ├── exam.png              # 考试页面示意图
+  │   ├── index.png             # 首页示意图
+  ├── index.html                # 首页主页面
+  ├── js/                       # 前端JS及样式目录
+  │   ├── api.js                # API相关JS
+  │   ├── navbar.css            # 导航栏样式
+  │   └── navbar.js             # 导航栏JS逻辑
+  ├── login.html                # 登录页面
+  ├── package-lock.json         # npm依赖锁定文件
+  ├── package.json              # npm依赖配置
+  ├── PDF导出服务使用说明.md    # PDF导出服务说明
+  ├── practice.html             # 刷题模式页面
+  ├── QuesBank启动器.bat        # Windows启动器
+  ├── readme.html               # 图文说明页面
+  ├── README.md                 # 项目说明文档
+  ├── server.js                 # Node.js后端主服务
+  ├── settings.html             # 设置页面
+  ├── test_export.html          # 试卷导出测试页面
+  ├── test.html                 # 功能测试页面
+  ├── update_navigation.py      # 导航栏批量更新脚本
+  ├── 启动QuesBank.bat          # Windows一键启动脚本
+  ├── 启动器使用说明.md          # 启动器使用说明
+  ├── 图标修复说明.md            # 图标显示问题说明
+  ├── 宝塔一键部署.sh            # 宝塔面板一键部署脚本
+  ├── 宝塔快速部署.sh            # 宝塔面板快速部署脚本
+  ├── 宝塔面板部署指南.md        # 宝塔面板部署详细指南
+  ├── 导航栏优化说明.md          # 导航栏优化说明
+  ├── 导航栏拥挤问题解决方案.md  # 导航栏拥挤问题说明
+  ├── 导航栏更新总结.md          # 导航栏更新总结
+  ├── 导航栏统一更新总结.md      # 导航栏统一更新说明
+  ├── 快速启动.bat               # Windows快速启动脚本
+  ├── 数据库部署说明.md          # 数据库部署说明
+  ├── 文本框空格问题修复说明.md  # 文本框空格修复说明
+  ├── 更新日志.md                # 更新日志
+  ├── 本地测试启动器.bat          # 本地测试专用启动脚本
+  ├── 本地测试指南.md            # 本地测试说明
+  ├── 首页图片展示优化说明.md    # 首页图片展示优化说明
 ```
 
 ### API接口文档
@@ -465,4 +506,22 @@ QuesBank/
 
 ---
 
-**注意**: 本项目仅供学习和研究使用，请遵守相关法律法规和API使用条款。 
+**注意**: 本项目仅供学习和研究使用，请遵守相关法律法规和API使用条款。
+
+## V1.4 (2025-07-01)
+- 首页新增 QuesBank 品牌动画，支持渐变描边、发光、两行标题、主副标题分层动画，副标题支持由远及近动画和静态描边。
+- 打赏弹窗全面升级，支持本地二维码、SVG单选、渐变美化、移动端适配。
+- 新增题库导出标准A4试卷（HTML/WPS/Word）功能，排版美观，支持题型分组、自动编号、答题区等。
+- 首页动画和打赏弹窗均支持现代浏览器，视觉体验大幅提升。
+- 细节优化：副标题动画、发光、描边、渐隐时序等。
+
+## 打赏支持
+
+如果本项目对你有帮助，欢迎扫码支持开发者持续优化：
+
+<div align="center">
+  <img src="image/alipay_qr.png" alt="支付宝收款码" width="180" style="display:inline-block;margin:0 16px;" />
+  <img src="image/wechat_qr.png" alt="微信收款码" width="180" style="display:inline-block;margin:0 16px;" />
+</div>
+
+感谢您的支持！ 
